@@ -13,7 +13,19 @@ class ParkingLotAdmin(admin.ModelAdmin):
     inlines = [ParkingSpaceInline, ]
 
 
-admin.site.register(models.Location)
+class LocationAdmin(admin.ModelAdmin):
+    model = models.Location
+    fieldsets = (
+        (None, {
+            'fields': ('cep', 'street', 'number', 'neighborhood', 'city', 'state', 'country', 'complement')
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('latitude', 'longitude'),
+        }),
+    )
+
+admin.site.register(models.Location, LocationAdmin)
 admin.site.register(models.Bicycle)
 admin.site.register(models.ParkingLot, ParkingLotAdmin)
 admin.site.register(models.ParkingSpace)
