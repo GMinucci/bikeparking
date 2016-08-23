@@ -21,17 +21,17 @@ class Location(models.Model):
     longitude = models.FloatField('Longitude')
 
 
-class ParkingSpace(models.Model):
-    status = models.CharField(choices=parking_space_status, max_length=20)
-
-
 class ParkingLot(models.Model):
     location = models.ForeignKey(Location)
-    parking_spaces = models.ForeignKey(ParkingSpace, on_delete=models.CASCADE)
     description = models.TextField('Descricao')
     default_price = models.FloatField('Preco padrao')
     per_hour_price = models.FloatField('Preco por hora')
     active = models.BooleanField('Ativo')
+
+
+class ParkingSpace(models.Model):
+    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_lot')
+    status = models.CharField(choices=parking_space_status, max_length=20)
 
 
 class Bicycle(models.Model):
