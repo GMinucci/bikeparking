@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from geopy.geocoders import GoogleV3
 
 # Models Enum declarations
 parking_space_status = (
@@ -19,8 +20,8 @@ class Location(models.Model):
     state = models.CharField('Estado', max_length=100)
     country = models.CharField('Pais', max_length=100)
     complement = models.CharField('Complemento', max_length=100)
-    latitude = models.FloatField('Latitude')
-    longitude = models.FloatField('Longitude')
+    latitude = models.FloatField('Latitude', blank=True)
+    longitude = models.FloatField('Longitude', blank=True)
 
     class Meta:
         verbose_name = 'Localizacao'
@@ -28,6 +29,14 @@ class Location(models.Model):
 
     def __unicode__(self):
         return "%s, %s" % (self.street, self.number)
+
+    def save(self, *args, **kwargs):
+        if not self.latitude or self.longitude:
+            geolocator = GoogleV3()
+            location = geolocator.geocode(', '.join([self.street, '%i' % self.number, self.neighborhood, self.city, self.state, self.country]))
+            self.latitude = location.latitude
+            self.longitude = location.longitude
+        super(Location, self).save(*args, **kwargs)
 
 
 class ParkingLot(models.Model):
