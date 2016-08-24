@@ -1,5 +1,6 @@
 from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 
 
-def index(request):
-    return HttpResponse("Hello world. You are at Website app index.")
+class IndexPage(TemplateView):
+    template_name = 'templates/index.html'
