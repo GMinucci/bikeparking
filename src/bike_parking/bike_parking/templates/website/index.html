@@ -1,4 +1,13 @@
 {% extends "base.html" %}
 {% block view %}
-    <p>Bike Parking ... Please signup to continue </p>
+
+    <div class="container">
+        <div class="starter-template">
+            <h1>Bike Parking</h1>
+            <p class="lead">Landing page do projeto. Você não está logado.</p>
+            <p><a href="{% url 'login' %}">Clique aqui</a> para fazer login ou cadastrar.</p>
+            <p><a href="{% url 'test' %}">Clique aqui</a> para acessar os estacionamentos disponíveis.</p>
+        </div>
+    </div>
+
 {% endblock %}
