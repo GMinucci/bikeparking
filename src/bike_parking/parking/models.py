@@ -10,6 +10,12 @@ parking_space_status = (
     ('broken', 'Quebrado'),
 )
 
+bicycle_status = (
+    ('idle', 'Livre'),
+    ('leased', 'Alugado'),
+    ('broken', 'Quebrado'),
+)
+
 
 class Location(models.Model):
     cep = models.CharField('CEP', max_length=15)
@@ -19,7 +25,7 @@ class Location(models.Model):
     city = models.CharField('Cidade', max_length=100)
     state = models.CharField('Estado', max_length=100)
     country = models.CharField('Pais', max_length=100)
-    complement = models.CharField('Complemento', max_length=100)
+    complement = models.CharField('Complemento', max_length=100, blank=True)
     latitude = models.FloatField('Latitude', blank=True)
     longitude = models.FloatField('Longitude', blank=True)
 
@@ -42,7 +48,7 @@ class Location(models.Model):
 class ParkingLot(models.Model):
     location = models.ForeignKey(Location)
     name = models.CharField('Nome', max_length=100)
-    description = models.TextField('Descricao')
+    description = models.TextField('Descricao', blank=True)
     default_price = models.FloatField('Preco padrao')
     per_hour_price = models.FloatField('Preco por hora')
     active = models.BooleanField('Ativo')
@@ -65,11 +71,12 @@ class ParkingSpace(models.Model):
         verbose_name_plural = 'Vagas'
 
     def __unicode__(self):
-        return "%i - %s" % (self.number, self.parking_lot)
+        return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
 
 
 class Bicycle(models.Model):
     parking_space = models.ForeignKey(ParkingSpace)
+    status = models.CharField(choices=bicycle_status, max_length=20)
     model = models.CharField('Modelo', max_length=100)
     serial_number = models.CharField('Numero de serie', max_length=100)
 
@@ -79,6 +86,16 @@ class Bicycle(models.Model):
 
     def __unicode__(self):
         return self.model
+
+    def save(self, *args, **kwargs):
+        if self.status == 'idle':
+            self.parking_space.status = 'occupied'
+        if self.status == 'leased':
+            self.parking_space.status = 'idle'
+        self.parking_space.save()
+        super(Bicycle, self).save(*args, **kwargs)
+
+
 
 
 
