@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.contrib.auth.models import User
 from geopy.geocoders import GoogleV3
 
 # Models Enum declarations
@@ -25,9 +26,9 @@ class Location(models.Model):
     city = models.CharField('Cidade', max_length=100)
     state = models.CharField('Estado', max_length=100)
     country = models.CharField('Pais', max_length=100)
-    complement = models.CharField('Complemento', max_length=100, blank=True)
-    latitude = models.FloatField('Latitude', blank=True)
-    longitude = models.FloatField('Longitude', blank=True)
+    complement = models.CharField('Complemento', max_length=100, blank=True, null=True)
+    latitude = models.FloatField('Latitude', blank=True, null=True)
+    longitude = models.FloatField('Longitude', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Localizacao'
@@ -48,7 +49,7 @@ class Location(models.Model):
 class ParkingLot(models.Model):
     location = models.ForeignKey(Location)
     name = models.CharField('Nome', max_length=100)
-    description = models.TextField('Descricao', blank=True)
+    description = models.TextField('Descricao', blank=True, null=True)
     default_price = models.FloatField('Preco padrao')
     per_hour_price = models.FloatField('Preco por hora')
     active = models.BooleanField('Ativo')
@@ -94,6 +95,17 @@ class Bicycle(models.Model):
             self.parking_space.status = 'idle'
         self.parking_space.save()
         super(Bicycle, self).save(*args, **kwargs)
+
+
+class Person(models.Model):
+    user = models.OneToOneField(User, related_name='Person')
+    active = models.BooleanField('Ativo', default=True)
+    phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
+
+    class Meta:
+        app_label = 'person'
+        verbose_name = 'Usuario'
+        verbose_name_plural = 'Usuarios'
 
 
 
