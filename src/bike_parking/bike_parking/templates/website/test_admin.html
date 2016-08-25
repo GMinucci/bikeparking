@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block view %}
+
+    {% for item in parkings %}
+        <p class="lead">Estacionamento: {{ item.name }}</p>
+        <ul>
+            {% for space in item.parking_spaces.all %}
+            <li>
+                Vaga {{ space.number }}: {{ space.get_status_display }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+{% endblock %}

@@ -63,7 +63,7 @@ class ParkingLot(models.Model):
 
 
 class ParkingSpace(models.Model):
-    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_lot')
+    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
     number = models.IntegerField('Numero')
     status = models.CharField(choices=parking_space_status, max_length=20)
 
@@ -103,11 +103,8 @@ class Person(models.Model):
     phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
 
     class Meta:
-        app_label = 'person'
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
 
-
-
-
-
+    def __unicode__(self):
+        return '%s %s' % (self.user.first_name, self.user.last_name)
