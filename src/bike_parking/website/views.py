@@ -1,10 +1,10 @@
-from django.http import HttpResponse
-from django.views.generic import TemplateView, ListView, View
-from django.shortcuts import render
+from django.urls import reverse
+from django.views.generic import TemplateView, ListView
+from django.shortcuts import redirect
 from parking.models import ParkingLot
 
 
-class IndexPage(View):
+class IndexPage(TemplateView):
     template_name = 'website/index.html'
 
 
@@ -12,14 +12,23 @@ class LoginPage(TemplateView):
     template_name = 'website/login.html'
 
 
-class TestAdminPage(ListView):
-    template_name = 'website/test_admin.html'
+class AdminIndexPage(ListView):
+    template_name = 'website/admin/index.html'
     context_object_name = 'parkings'
     queryset = ParkingLot.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name='admin').exists():
+            return redirect(reverse('system_index'))
+        return super(AdminIndexPage, self).get(request, *args, **kwargs)
 
-class TestClientPage(ListView):
-    template_name = 'website/test_client.html'
+
+class SystemIndexPage(ListView):
+    template_name = 'website/system/index.html'
     context_object_name = 'parkings'
     queryset = ParkingLot.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        if request.user.groups.filter(name='admin').exists():
+            return redirect(reverse('admin_index'))
+        return super(SystemIndexPage, self).get(request, *args, **kwargs)
