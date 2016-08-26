@@ -29,5 +29,5 @@ def update_parking_space_from_bicycle(sender, **kwargs):
 def update_rental_status_from_payment(sender, **kwargs):
     payment = kwargs['instance']
     if payment.status == 'confirmed':
-        payment.rental.rental_status = 'closed'
+        payment.rental.rental_status = 'paid'
         payment.rental.save()

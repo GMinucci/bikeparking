@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import math
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -134,6 +137,7 @@ class Rental(models.Model):
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
     start_time = models.DateField('Data de inicio', blank=True)
     end_time = models.DateField('Data de termino', blank=True, null=True)
+    total = models.FloatField('Total', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Aluguel'
@@ -142,22 +146,34 @@ class Rental(models.Model):
     def __unicode__(self):
         return "%s - %s, %s" % (self.get_rental_status_display(), self.start_time, self.end_time)
 
-    def save(self, *args, **kwargs):
+    def update_rental_status(self):
         if not self.start_time:
             self.start_time = timezone.now()
         if self.start_time and not self.end_time:
             self.rental_status = 'open'
         if self.start_time and self.end_time and self.rental_status == 'open':
             self.rental_status = 'closed'
+
+    def update_rental_total_price(self):
+        if self.rental_status == 'closed':
+            # delta_time is the delta time in hours from start_time to end_time
+            delta_time = (self.end_time - self.start_time).total_seconds() // 3600
+            _, total_hours = math.modf(delta_time)
+            self.total = self.parking_space.parking_lot.default_price
+            self.total += total_hours * self.parking_space.parking_lot.per_hour_price
+
+    def save(self, *args, **kwargs):
+        self.update_rental_status()
+        self.update_rental_total_price()
         super(Rental, self).save(*args, **kwargs)
 
 
 class Payment(models.Model):
     rental = models.ForeignKey(Rental, related_name='payments')
     date = models.DateField('Data de pagamento')
-    total = models.FloatField('Total')
+    total = models.FloatField('Total', blank=True)
     payment_type = models.CharField(choices=payment_type, max_length=50)
-    status = models.CharField(choices=payment_status, max_length=50)
+    status = models.CharField(choices=payment_status, max_length=50, default='open')
 
     class Meta:
         verbose_name = 'Pagamento'
@@ -165,3 +181,8 @@ class Payment(models.Model):
 
     def __unicode__(self):
         return "%f (%s) - %s" % (self.total, self.get_status_display(), self.date)
+
+    def save(self, *args, **kwargs):
+        if not self.total:
+            self.total = self.rental.total
+        super(Payment, self).save(*args, **kwargs)
