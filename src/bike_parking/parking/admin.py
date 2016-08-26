@@ -30,4 +30,6 @@ admin.site.register(models.Bicycle)
 admin.site.register(models.ParkingLot, ParkingLotAdmin)
 admin.site.register(models.ParkingSpace)
 admin.site.register(models.Person)
+admin.site.register(models.Rental)
+admin.site.register(models.Payment)
 

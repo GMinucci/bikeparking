@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 from geopy.geocoders import GoogleV3
 
 # Models Enum declarations
@@ -15,6 +16,29 @@ bicycle_status = (
     ('idle', 'Livre'),
     ('leased', 'Alugado'),
     ('broken', 'Quebrado'),
+)
+
+rental_type = (
+    ('space', 'Aluguel de vaga'),
+    ('bicycle', 'Aluguel de bicicleta'),
+)
+
+rental_status = (
+    ('open', 'Aberto'),
+    ('closed', 'Fechado'),
+    ('paid', 'Pago'),
+)
+
+payment_status = (
+    ('open', 'Aberto'),
+    ('confirmed', 'Confirmado'),
+    ('refused', 'Cancelado'),
+)
+
+payment_type = (
+    ('credit_card', 'Cartao de credito'),
+    ('debit_card', 'Cartao de debito'),
+    ('bank_slip', 'Transferencia bancaria'),
 )
 
 
@@ -88,6 +112,16 @@ class ParkingSpace(models.Model):
     def __unicode__(self):
         return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
 
+    def update_space_status(self, leased):
+        print "A pei pow e %s" % leased
+        if self.status == 'broken':
+            return
+        if leased:
+            self.status = 'leased'
+        else:
+            self.status = 'idle'
+        self.save()
+
 
 class Bicycle(models.Model):
     parking_space = models.ForeignKey(ParkingSpace)
@@ -109,3 +143,44 @@ class Bicycle(models.Model):
             self.parking_space.status = 'idle'
         self.parking_space.save()
         super(Bicycle, self).save(*args, **kwargs)
+
+
+class Rental(models.Model):
+    lodger = models.ForeignKey(Person, related_name='rentals')
+    parking_space = models.ForeignKey(ParkingSpace, related_name='rentals')
+    rental_type = models.CharField('Tipo de locacao', choices=rental_type, max_length=50)
+    rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
+    start_time = models.DateField('Data de inicio', blank=True)
+    end_time = models.DateField('Data de termino', blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Aluguel'
+        verbose_name_plural = 'Alugueis'
+
+    def __unicode__(self):
+        return "%s - %s, %s" % (self.get_rental_status_display(), self.start_time, self.end_time)
+
+    def save(self, *args, **kwargs):
+        if not self.start_time:
+            self.start_time = timezone.now()
+        if self.start_time and not self.end_time:
+            self.rental_status = 'open'
+        if self.start_time and self.end_time and self.rental_status == 'open':
+            self.rental_status = 'closed'
+        self.parking_space.update_space_status(self.end_time is None)
+        super(Rental, self).save(*args, **kwargs)
+
+
+class Payment(models.Model):
+    rental = models.ForeignKey(Rental, related_name='payments')
+    date = models.DateField('Data de pagamento')
+    total = models.FloatField('Total')
+    payment_type = models.CharField(choices=payment_type, max_length=50)
+    status = models.CharField(choices=payment_status, max_length=50)
+
+    class Meta:
+        verbose_name = 'Pagamento'
+        verbose_name_plural = 'Pagamentos'
+
+    def __unicode__(self):
+        return "%f (%s) - %s" % (self.total, self.get_status_display(), self.date)
