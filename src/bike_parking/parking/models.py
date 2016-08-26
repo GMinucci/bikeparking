@@ -112,16 +112,6 @@ class ParkingSpace(models.Model):
     def __unicode__(self):
         return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
 
-    def update_space_status(self, leased):
-        print "A pei pow e %s" % leased
-        if self.status == 'broken':
-            return
-        if leased:
-            self.status = 'leased'
-        else:
-            self.status = 'idle'
-        self.save()
-
 
 class Bicycle(models.Model):
     parking_space = models.ForeignKey(ParkingSpace)
@@ -135,14 +125,6 @@ class Bicycle(models.Model):
 
     def __unicode__(self):
         return self.model
-
-    def save(self, *args, **kwargs):
-        if self.status == 'idle':
-            self.parking_space.status = 'occupied'
-        if self.status == 'leased':
-            self.parking_space.status = 'idle'
-        self.parking_space.save()
-        super(Bicycle, self).save(*args, **kwargs)
 
 
 class Rental(models.Model):
@@ -167,7 +149,6 @@ class Rental(models.Model):
             self.rental_status = 'open'
         if self.start_time and self.end_time and self.rental_status == 'open':
             self.rental_status = 'closed'
-        self.parking_space.update_space_status(self.end_time is None)
         super(Rental, self).save(*args, **kwargs)
 
 
