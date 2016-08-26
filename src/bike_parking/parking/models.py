@@ -18,6 +18,19 @@ bicycle_status = (
 )
 
 
+class Person(models.Model):
+    user = models.OneToOneField(User, related_name='Person')
+    active = models.BooleanField('Ativo', default=True)
+    phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Usuario'
+        verbose_name_plural = 'Usuarios'
+
+    def __unicode__(self):
+        return '%s %s' % (self.user.first_name, self.user.last_name)
+
+
 class Location(models.Model):
     cep = models.CharField('CEP', max_length=15)
     street = models.CharField('Endereco', max_length=100)
@@ -47,6 +60,7 @@ class Location(models.Model):
 
 
 class ParkingLot(models.Model):
+    owner = models.ForeignKey(Person, related_name='parking_lots')
     location = models.ForeignKey(Location)
     name = models.CharField('Nome', max_length=100)
     description = models.TextField('Descricao', blank=True, null=True)
@@ -95,16 +109,3 @@ class Bicycle(models.Model):
             self.parking_space.status = 'idle'
         self.parking_space.save()
         super(Bicycle, self).save(*args, **kwargs)
-
-
-class Person(models.Model):
-    user = models.OneToOneField(User, related_name='Person')
-    active = models.BooleanField('Ativo', default=True)
-    phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'Usuario'
-        verbose_name_plural = 'Usuarios'
-
-    def __unicode__(self):
-        return '%s %s' % (self.user.first_name, self.user.last_name)
