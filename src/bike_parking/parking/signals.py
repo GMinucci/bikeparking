@@ -23,3 +23,11 @@ def update_parking_space_from_bicycle(sender, **kwargs):
     if bicycle.status == 'leased':
         bicycle.parking_space.status = 'idle'
     bicycle.parking_space.save()
+
+
+@receiver(post_save, sender=Payment)
+def update_rental_status_from_payment(sender, **kwargs):
+    payment = kwargs['instance']
+    if payment.status == 'confirmed':
+        payment.rental.rental_status = 'closed'
+        payment.rental.save()

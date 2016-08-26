@@ -1,11 +1,13 @@
 from django.apps import AppConfig
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class ParkingConfig(AppConfig):
     name = 'parking'
 
     def ready(self):
-        from .signals import *
-        pre_save.connect(receiver, sender='parking.Rental')
-        pre_save.connect(receiver, sender='parking.Bicycle')
+        import signals
+        post_save.connect(receiver, sender='parking.Rental')
+        post_save.connect(receiver, sender='parking.Bicycle')
+        post_save.connect(receiver, sender='parking.Payment')
