@@ -20,7 +20,7 @@ class AdminIndexPage(ListView):
     def get(self, request, *args, **kwargs):
         if not request.user.groups.filter(name='admin').exists():
             return redirect(reverse('system_index'))
-        self.queryset = ParkingLot.objects.filter(owner__user=request.user)
+        self.queryset = ParkingLot.objects.filter(owner__user=request.user, active=True)
         return super(AdminIndexPage, self).get(request, *args, **kwargs)
 
 
