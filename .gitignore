@@ -147,3 +147,5 @@ node_modules/
 .sass-cache/
 /src/local_settings.pylocal/
 local
+
+src/bike_parking/bike_parking/deployment_settings.py

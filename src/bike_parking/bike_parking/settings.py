@@ -155,3 +155,9 @@ SOCIALACCOUNT_QUERY_EMAIL = False
 
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URLNAME = "/sistema"
+
+# Deployment DATABASE settings
+try:
+    from deployment_settings import *
+except ImportError:
+    pass
