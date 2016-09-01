@@ -136,10 +136,17 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Media and Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+MEDIA_URL = "http://localhost:8000/"
+MEDIA_ROOT = PROJECT_DIR.child('media')
+STATIC_ROOT = MEDIA_ROOT.child('static')
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    PROJECT_DIR.parent.child('assets'),
+)
 
 # All auth
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

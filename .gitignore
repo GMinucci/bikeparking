@@ -149,3 +149,4 @@ node_modules/
 local
 
 src/bike_parking/bike_parking/deployment_settings.py
+src/bike_parking/bike_parking/media/
