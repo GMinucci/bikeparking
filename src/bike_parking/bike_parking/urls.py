@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^loccent/', admin.site.urls),
     url(r'^parking/', include('parking.urls')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^api/', include('api.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

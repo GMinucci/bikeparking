@@ -48,8 +48,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'rest_framework',
     'parking',
     'website',
+    'api',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -168,3 +170,12 @@ try:
     from deployment_settings import *
 except ImportError:
     pass
+
+# DJANGO REST FRAMEWORK settings
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
