@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from parking.models import ParkingLot
+from .serializers import ParkingLotSerializer
 
-# Create your views here.
+
+class ParkingLotViewSet(viewsets.ModelViewSet):
+    queryset = ParkingLot.objects.all()
+    serializer_class = ParkingLotSerializer
