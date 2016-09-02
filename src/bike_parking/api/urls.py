@@ -5,6 +5,7 @@ from .views import ParkingLotViewSet
 
 router = routers.DefaultRouter()
 router.register(r'parkinglot', ParkingLotViewSet)
+# router.register(r'parkinglot/(?P<pk>[0-9]+)/$', ParkingLotDetailViewSet)
 
 
 urlpatterns = [

@@ -105,7 +105,6 @@ class ParkingLot(models.Model):
 
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
-    number = models.IntegerField('Numero')
     status = models.CharField(choices=parking_space_status, max_length=20)
 
     class Meta:
@@ -113,11 +112,11 @@ class ParkingSpace(models.Model):
         verbose_name_plural = 'Vagas'
 
     def __unicode__(self):
-        return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
+        return "%i- %s - %s" % (self.id, self.get_status_display(), self.parking_lot)
 
 
 class Bicycle(models.Model):
-    parking_space = models.ForeignKey(ParkingSpace)
+    parking_space = models.ForeignKey(ParkingSpace, related_name='bicycle')
     status = models.CharField(choices=bicycle_status, max_length=20)
     model = models.CharField('Modelo', max_length=100)
     serial_number = models.CharField('Numero de serie', max_length=100)
