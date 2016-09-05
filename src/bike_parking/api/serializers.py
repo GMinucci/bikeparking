@@ -47,19 +47,19 @@ class BicycleDetailSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'status',
             'model',
-            'serial_number'
+            'serial_number',
         )
 
 
 class ParkingSpaceListSerializer(serializers.HyperlinkedModelSerializer):
-    # bicycle = BicycleDetailSerializer(many=False, read_only=True, allow_null=True)
+    bicycle = BicycleDetailSerializer(many=False, read_only=True, allow_null=True)
 
     class Meta:
         model = ParkingSpace
         fields = (
             'id',
             'status',
-            # 'bicycle',
+            'bicycle',
         )
 
 

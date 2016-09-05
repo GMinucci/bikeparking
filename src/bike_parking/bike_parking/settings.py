@@ -99,9 +99,17 @@ WSGI_APPLICATION = 'bike_parking.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bikeparking',
+        'USER': 'bikeparking',
+        'PASSWORD': 'da39a3ee5e6b4',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 
@@ -165,11 +173,11 @@ SOCIALACCOUNT_QUERY_EMAIL = False
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URLNAME = "/sistema"
 
-# Deployment DATABASE settings
-try:
-    from deployment_settings import *
-except ImportError:
-    pass
+# # Deployment DATABASE settings
+# try:
+#     from deployment_settings import *
+# except ImportError:
+#     pass
 
 # DJANGO REST FRAMEWORK settings
 REST_FRAMEWORK = {

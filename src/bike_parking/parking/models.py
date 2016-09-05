@@ -106,6 +106,7 @@ class ParkingLot(models.Model):
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
     status = models.CharField(choices=parking_space_status, max_length=20)
+    bicycle = models.OneToOneField('Bicycle', related_name='parking_space', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Vaga'
@@ -116,7 +117,6 @@ class ParkingSpace(models.Model):
 
 
 class Bicycle(models.Model):
-    parking_space = models.ForeignKey(ParkingSpace, related_name='bicycle')
     status = models.CharField(choices=bicycle_status, max_length=20)
     model = models.CharField('Modelo', max_length=100)
     serial_number = models.CharField('Numero de serie', max_length=100)
