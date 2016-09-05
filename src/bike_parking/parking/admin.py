@@ -21,7 +21,7 @@ class LocationAdmin(admin.ModelAdmin):
         }),
         ('Advanced options', {
             'classes': ('collapse',),
-            'fields': ('latitude', 'longitude'),
+            'fields': ('latitude', 'longitude', 'point'),
         }),
     )
 

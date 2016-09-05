@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.gis',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -99,7 +100,7 @@ WSGI_APPLICATION = 'bike_parking.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'bikeparking',
         'USER': 'bikeparking',
         'PASSWORD': 'da39a3ee5e6b4',
