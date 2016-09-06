@@ -2,9 +2,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, views
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from parking.models import ParkingLot, Person
+from parking.models import ParkingLot, Person, Rental
 from rest_framework.response import Response
-from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer
+from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer, RentalListSerializer
 from .service import get_nearby_queryset
 
 
@@ -22,6 +22,16 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = get_nearby_queryset(request.GET.get('lat', 0), request.GET.get('lng', 0)).filter(active=True)
         serializer = ParkingLotListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class RentalsViewSet(viewsets.ModelViewSet):
+    queryset = Rental.objects.none()
+    serializer_class = RentalListSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = Rental.objects.filter(lodger__user=request.user)
+        serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
 

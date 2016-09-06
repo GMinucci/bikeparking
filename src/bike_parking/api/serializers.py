@@ -1,6 +1,18 @@
-from parking.models import ParkingLot, Location, Person, ParkingSpace, Bicycle
+from parking.models import ParkingLot, Location, Person, ParkingSpace, Bicycle, Rental
 from django.contrib.auth.models import User
 from rest_framework import serializers
+
+
+class RentalListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Rental
+        fields = (
+            'rental_status',
+            'rental_type',
+            'start_time',
+            'end_time',
+            'total',
+        )
 
 
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
@@ -43,12 +55,14 @@ class PersonDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = UserDetailSerializer(many=False, read_only=True)
+    # rentals = RentalListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
         fields = (
             'phone',
             'user',
+            # 'rentals',
         )
 
 
