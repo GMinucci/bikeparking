@@ -17,9 +17,6 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
         return ParkingLotListSerializer
 
     def list(self, request, *args, **kwargs):
-        print request.GET
-        print "COORDINATES %s %s" % (request.GET['lat'], request.GET['long'])
-        queryset = get_nearby_queryset(request.GET['lat'], request.GET['long'])
+        queryset = get_nearby_queryset(request.GET.get('lat', 0), request.GET.get('lng', 0)).filter(active=True)
         serializer = ParkingLotListSerializer(queryset, many=True)
         return Response(serializer.data)
-        # print request.GET.get
