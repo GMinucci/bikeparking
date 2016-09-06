@@ -4,8 +4,8 @@ import math
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.gis.db import models
-from django.contrib.gis.geos import Point, GEOSGeometry
+from django.contrib.gis.db import models as psModels
+from django.contrib.gis.geos import Point
 from django.utils import timezone
 from geopy.geocoders import GoogleV3
 
@@ -71,7 +71,7 @@ class Location(models.Model):
     complement = models.CharField('Complemento', max_length=100, blank=True, null=True)
     latitude = models.FloatField('Latitude', blank=True, null=True)
     longitude = models.FloatField('Longitude', blank=True, null=True)
-    point = models.PointField(blank=True, null=True)
+    point = psModels.PointField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Localizacao'
