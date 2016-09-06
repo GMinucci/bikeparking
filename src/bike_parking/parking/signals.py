@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from .models import *
 
@@ -49,3 +49,16 @@ def update_rental_status_from_payment(sender, **kwargs):
     if payment.status == 'confirmed':
         payment.rental.rental_status = 'paid'
         payment.rental.save()
+
+
+@receiver(pre_save, sender=Payment)
+def validate_rental_status_from_payment(sender, **kwargs):
+    """
+    Called before save on Payment model to avoid paying an already paid Rental
+    :param sender:
+    :param kwargs:
+    :return:
+    """
+    payments = kwargs['instance']
+    if payments.rental.rental_status == 'paid':
+        raise Exception('Already payd rental')
