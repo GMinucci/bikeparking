@@ -2,11 +2,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, views
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from parking.models import ParkingLot, Person, Rental
 from rest_framework.response import Response
+
+from parking.models import ParkingLot, Person, Rental
+from parking.service import get_nearby_queryset
 from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer, \
     RentalListSerializer, RentalDetailSerializer
-from .service import get_nearby_queryset
 
 
 class ParkingLotViewSet(viewsets.ModelViewSet):

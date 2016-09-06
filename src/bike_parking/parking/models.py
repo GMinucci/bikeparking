@@ -1,13 +1,11 @@
 from __future__ import unicode_literals
-
-import math
-
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.gis.db import models as psModels
+from django.contrib.gis.db import models as psmodels
 from django.contrib.gis.geos import Point
 from django.utils import timezone
 from geopy.geocoders import GoogleV3
+from .service import get_rental_total_price
 
 # Models Enum declarations
 parking_space_status = (
@@ -71,7 +69,7 @@ class Location(models.Model):
     complement = models.CharField('Complemento', max_length=100, blank=True, null=True)
     latitude = models.FloatField('Latitude', blank=True, null=True)
     longitude = models.FloatField('Longitude', blank=True, null=True)
-    point = psModels.PointField(blank=True, null=True)
+    point = psmodels.PointField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Localizacao'
@@ -157,17 +155,9 @@ class Rental(models.Model):
         if self.start_time and self.end_time and self.rental_status == 'open':
             self.rental_status = 'closed'
 
-    def update_rental_total_price(self):
-        if self.rental_status == 'closed':
-            # delta_time is the delta time in hours from start_time to end_time
-            delta_time = (self.end_time - self.start_time).total_seconds() // 3600
-            _, total_hours = math.modf(delta_time)
-            self.total = self.parking_space.parking_lot.default_price
-            self.total += total_hours * self.parking_space.parking_lot.per_hour_price
-
     def save(self, *args, **kwargs):
         self.update_rental_status()
-        self.update_rental_total_price()
+        self.total = get_rental_total_price(self)
         super(Rental, self).save(*args, **kwargs)
 
 
