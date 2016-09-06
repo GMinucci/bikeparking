@@ -41,6 +41,17 @@ class PersonDetailSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserDetailSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Person
+        fields = (
+            'phone',
+            'user',
+        )
+
+
 class BicycleDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Bicycle

@@ -1,12 +1,15 @@
-from rest_framework import viewsets
-from parking.models import ParkingLot
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, views
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from parking.models import ParkingLot, Person
 from rest_framework.response import Response
-from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer
+from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer
 from .service import get_nearby_queryset
 
 
 class ParkingLotViewSet(viewsets.ModelViewSet):
-    queryset = ParkingLot.objects.all()
+    queryset = ParkingLot.objects.none()
     serializer_class = ParkingLotListSerializer
 
     def get_serializer_class(self):
@@ -19,4 +22,14 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = get_nearby_queryset(request.GET.get('lat', 0), request.GET.get('lng', 0)).filter(active=True)
         serializer = ParkingLotListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProfileViewSet(views.APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        queryset = get_object_or_404(Person, user=request.user)
+        serializer = ProfileSerializer(queryset, many=False)
         return Response(serializer.data)
