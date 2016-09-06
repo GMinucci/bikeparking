@@ -183,7 +183,7 @@ class Payment(models.Model):
         verbose_name_plural = 'Pagamentos'
 
     def __unicode__(self):
-        return "%f (%s) - %s" % (self.total, self.get_status_display(), self.date)
+        return "%s - %s" % (self.get_status_display(), self.date)
 
     def save(self, *args, **kwargs):
         if not self.total:
