@@ -37,17 +37,18 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
         serializer = ParkingLotDetailSerializer(queryset, many=False)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
-    def rent(self, request, pk):
+    @detail_route(permission_classes=[IsAuthenticated],
+                  authentication_classes=[SessionAuthentication, BasicAuthentication],
+                  methods=['post'])
+    def rent(self, request):
         """
+        * Requires authenticated user *
         Start a Rental for one ParkingSpace
         :param request:
-        :param pk:
         :return:
         """
         data = dict(request.data.iteritems())
-        data['lodger'] = request.user.pk
-        print data
+        data['lodger'] = get_object_or_404(Person, user=request.user).pk
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()

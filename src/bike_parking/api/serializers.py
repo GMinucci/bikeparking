@@ -111,6 +111,7 @@ class ParkingSpaceListSerializer(serializers.HyperlinkedModelSerializer):
         model = ParkingSpace
         fields = (
             'id',
+            'number',
             'status',
             'bicycle',
         )
@@ -159,4 +160,5 @@ class RentSerializer(serializers.ModelSerializer):
         fields = (
             'lodger',
             'rental_type',
+            'parking_space'
         )
