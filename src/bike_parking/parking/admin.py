@@ -6,6 +6,9 @@ class ParkingSpaceInline(admin.TabularInline):
     model = models.ParkingSpace
     extra = 0
     max_num = 100
+    exclude = [
+        'number',
+    ]
 
 
 class ParkingLotAdmin(admin.ModelAdmin):

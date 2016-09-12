@@ -151,3 +151,12 @@ class ParkingLotDetailSerializer(serializers.HyperlinkedModelSerializer):
             'active',
             'parking_spaces',
         )
+
+
+class RentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rental
+        fields = (
+            'lodger',
+            'rental_type',
+        )

@@ -107,15 +107,21 @@ class ParkingLot(models.Model):
 
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
-    status = models.CharField(choices=parking_space_status, max_length=20)
+    number = models.PositiveIntegerField('Numero', blank=True)
+    status = models.CharField(choices=parking_space_status, max_length=20, default='idle')
     bicycle = models.OneToOneField('Bicycle', related_name='parking_space', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Vaga'
         verbose_name_plural = 'Vagas'
 
+    def save(self, *args, **kwargs):
+        if not self.number:
+            self.number = self.parking_lot.parking_spaces.count() + 1
+        super(ParkingSpace, self).save(*args, **kwargs)
+
     def __unicode__(self):
-        return "%i- %s - %s" % (self.id, self.get_status_display(), self.parking_lot)
+        return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
 
 
 class Bicycle(models.Model):
