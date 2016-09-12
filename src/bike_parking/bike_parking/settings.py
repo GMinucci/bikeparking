@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'rest_framework_swagger',
     'parking',
     'website',
     'api',
@@ -93,7 +94,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 WSGI_APPLICATION = 'bike_parking.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
@@ -174,12 +174,6 @@ SOCIALACCOUNT_QUERY_EMAIL = False
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URLNAME = "/sistema"
 
-# # Deployment DATABASE settings
-# try:
-#     from deployment_settings import *
-# except ImportError:
-#     pass
-
 # DJANGO REST FRAMEWORK settings
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -187,8 +181,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework.authentication.BasicAuthetication',
-    #     'rest_framework.authentication.SessionAuthetication',
-    # ),
 }

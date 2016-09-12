@@ -9,6 +9,8 @@ router.register(r'rentals', RentalsViewSet)
 
 urlpatterns = [
     url(r'^profile/$', ProfileViewSet.as_view()),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+    # url(r'^docs/$', documentation_view),
     url(r'^', include(router.urls)),
     # url(r'^api-auth')
 ]

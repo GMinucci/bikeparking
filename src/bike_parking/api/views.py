@@ -11,17 +11,28 @@ from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, P
     RentalListSerializer, RentalDetailSerializer, RentSerializer
 
 
-class ParkingLotViewSet(viewsets.ModelViewSet):
+class ParkingLotViewSet(viewsets.ViewSet):
     queryset = ParkingLot.objects.none()
     serializer_class = ParkingLotListSerializer
 
     def list(self, request, *args, **kwargs):
         """
         List all nearby ParkingLot
-        :param request:
-            - lat: Latitude
-            - lng: Longitude
-        :return:
+        ---
+
+        serializer: api.serializers.ParkingLotListSerializer
+
+        parameters:
+            - name: lat
+              description: Latitude
+              required: false
+              type: string
+              paramType: form
+            - name: lng
+              description: Longitude
+              required: false
+              type: string
+              paramType: form
         """
         queryset = get_nearby_queryset(request.GET.get('lat', 0), request.GET.get('lng', 0)).filter(active=True)
         serializer = ParkingLotListSerializer(queryset, many=True)
@@ -30,9 +41,13 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None, *args, **kwargs):
         """
         Return details of one ParkingLot
-        :param request:
-        :param pk:
-        :return:
+        ---
+
+        serializer: api.serializers.ParkingLotDetailSerializer
+
+        responseMessages:
+            - code: 404
+              message: Not found
         """
         queryset = get_object_or_404(ParkingLot, pk=pk)
         serializer = ParkingLotDetailSerializer(queryset, many=False)
@@ -43,11 +58,17 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
                   methods=['post'])
     def rent(self, request, pk):
         """
-        * Requires authenticated user *
+        **Requires authenticated user** \n
         Start a Rental for one ParkingSpace
-        :param request:
-        :param pk:
-        :return:
+        ---
+
+        serializer: api.serializers.RentSerializer
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+            - code: 404
+              message: Not found
         """
         data = dict(request.data.iteritems())
         data['lodger'] = get_object_or_404(Person, user=request.user).pk
@@ -58,30 +79,44 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors)
 
 
-class RentalsViewSet(viewsets.ModelViewSet):
+class RentalsViewSet(viewsets.ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
     queryset = Rental.objects.none()
     serializer_class = RentalListSerializer
+    http_method_names = ['get']
 
     def list(self, request):
         """
-        * Requires authenticated user *
-        List all Rental from one user
-        :param request:
-        :return:
+        **Requires authenticated user** \n
+        Show open rental list information
+        ---
+
+        serializer: api.serializers.RentalListSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
         """
-        queryset = Rental.objects.filter(lodger__user=request.user).exclude(rental_status='closed').order_by('start_time')
+        queryset = Rental.objects.filter(lodger__user=request.user, rental_status='open').order_by('start_time')
         serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         """
-        * Requires authenticated user *
-        Display details of one Rental
-        :param request:
-        :param pk:
-        :return:
+        **Requires authenticated user** \n
+        Show rental detailed information
+        ---
+
+        serializer: api.serializers.RentalDetailSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
         """
         queryset = get_object_or_404(Rental, lodger__user=request.user, pk=pk)
         serializer = RentalDetailSerializer(queryset, many=False)
@@ -89,12 +124,40 @@ class RentalsViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['get'])
     def history(self, request):
+        """
+        **Requires authenticated user** \n
+        Show user closed rental history list
+        ---
+
+        serializer: api.serializers.RentalListSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+        """
         queryset = Rental.objects.filter(lodger__user=request.user, rental_status='closed').order_by('start_time')
         serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
     @detail_route(methods=['post'])
     def close(self, request, pk):
+        """
+        **Requires authenticated user** \n
+        Close selected rental
+        ---
+
+        serializer: api.serializers.RentalDetailSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+            - code: 404
+              message: Not found
+        """
         rental = get_object_or_404(Rental, pk=pk, lodger__user=request.user)
         rental.end_time = timezone.now()
         rental.save()
@@ -108,10 +171,15 @@ class ProfileViewSet(views.APIView):
 
     def get(self, request):
         """
-        * Requires authenticated user *
-        Display profile details of the current user
-        :param request:
-        :return:
+        **Requires authenticated user** \n
+        Show current user profile
+        ---
+
+        serializer: api.serializers.ProfileSerializer
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
         """
         queryset = get_object_or_404(Person, user=request.user)
         serializer = ProfileSerializer(queryset, many=False)
