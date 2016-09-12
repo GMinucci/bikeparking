@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import viewsets, views
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from parking.models import ParkingLot, Person, Rental
@@ -40,11 +41,12 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
     @detail_route(permission_classes=[IsAuthenticated],
                   authentication_classes=[SessionAuthentication, BasicAuthentication],
                   methods=['post'])
-    def rent(self, request):
+    def rent(self, request, pk):
         """
         * Requires authenticated user *
         Start a Rental for one ParkingSpace
         :param request:
+        :param pk:
         :return:
         """
         data = dict(request.data.iteritems())
@@ -69,7 +71,7 @@ class RentalsViewSet(viewsets.ModelViewSet):
         :param request:
         :return:
         """
-        queryset = Rental.objects.filter(lodger__user=request.user).order_by('start_time')
+        queryset = Rental.objects.filter(lodger__user=request.user).exclude(rental_status='closed').order_by('start_time')
         serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -83,6 +85,20 @@ class RentalsViewSet(viewsets.ModelViewSet):
         """
         queryset = get_object_or_404(Rental, lodger__user=request.user, pk=pk)
         serializer = RentalDetailSerializer(queryset, many=False)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def history(self, request):
+        queryset = Rental.objects.filter(lodger__user=request.user, rental_status='closed').order_by('start_time')
+        serializer = RentalListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def close(self, request, pk):
+        rental = get_object_or_404(Rental, pk=pk, lodger__user=request.user)
+        rental.end_time = timezone.now()
+        rental.save()
+        serializer = RentalDetailSerializer(rental, many=False)
         return Response(serializer.data)
 
 

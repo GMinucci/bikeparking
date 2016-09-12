@@ -5,7 +5,7 @@ from .views import ParkingLotViewSet, ProfileViewSet, RentalsViewSet
 
 router = routers.DefaultRouter()
 router.register(r'parkinglot', ParkingLotViewSet)
-router.register(r'profile/rentals', RentalsViewSet)
+router.register(r'rentals', RentalsViewSet)
 
 urlpatterns = [
     url(r'^profile/$', ProfileViewSet.as_view()),

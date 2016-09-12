@@ -142,8 +142,8 @@ class Rental(models.Model):
     parking_space = models.ForeignKey(ParkingSpace, related_name='rentals')
     rental_type = models.CharField('Tipo de locacao', choices=rental_type, max_length=50)
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
-    start_time = models.DateField('Data de inicio', blank=True)
-    end_time = models.DateField('Data de termino', blank=True, null=True)
+    start_time = models.DateTimeField('Data de inicio', blank=True)
+    end_time = models.DateTimeField('Data de termino', blank=True, null=True)
     total = models.FloatField('Total', blank=True, null=True)
 
     class Meta:
