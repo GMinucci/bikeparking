@@ -8,3 +8,4 @@ markdown
 django-filter
 psycopg2
 django-rest-swagger==0.3.8
+django-pagseguro2

@@ -83,14 +83,12 @@ class PersonDetailSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = UserDetailSerializer(many=False, read_only=True)
-    # rentals = RentalListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
         fields = (
             'phone',
             'user',
-            # 'rentals',
         )
 
 
@@ -161,4 +159,16 @@ class RentSerializer(serializers.ModelSerializer):
             'lodger',
             'rental_type',
             'parking_space'
+        )
+
+
+class RedirectPaymentSerializer(serializers.HyperlinkedModelSerializer):
+    rental = RentSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = (
+            'rental',
+            'total',
+            'redirect_url',
         )

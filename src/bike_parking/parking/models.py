@@ -34,6 +34,7 @@ rental_status = (
 
 payment_status = (
     ('open', 'Aberto'),
+    ('under_review', 'Em analise'),
     ('confirmed', 'Confirmado'),
     ('refused', 'Cancelado'),
 )
@@ -93,8 +94,8 @@ class ParkingLot(models.Model):
     location = models.ForeignKey(Location)
     name = models.CharField('Nome', max_length=100)
     description = models.TextField('Descricao', blank=True, null=True)
-    default_price = models.FloatField('Preco padrao')
-    per_hour_price = models.FloatField('Preco por hora')
+    default_price = models.DecimalField('Preco padrao', decimal_places=2, max_digits=50)
+    per_hour_price = models.DecimalField('Preco por hora', decimal_places=2, max_digits=50)
     active = models.BooleanField('Ativo')
 
     class Meta:
@@ -144,7 +145,7 @@ class Rental(models.Model):
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
     start_time = models.DateTimeField('Data de inicio', blank=True)
     end_time = models.DateTimeField('Data de termino', blank=True, null=True)
-    total = models.FloatField('Total', blank=True, null=True)
+    total = models.DecimalField('Total', blank=True, null=True, decimal_places=2, max_digits=50, default=0.01)
 
     class Meta:
         verbose_name = 'Aluguel'
@@ -169,10 +170,13 @@ class Rental(models.Model):
 
 class Payment(models.Model):
     rental = models.ForeignKey(Rental, related_name='payments')
-    date = models.DateField('Data de pagamento')
-    total = models.FloatField('Total', blank=True)
-    payment_type = models.CharField(choices=payment_type, max_length=50)
+    date = models.DateField('Data de pagamento', blank=True, null=True)
+    total = models.DecimalField('Total', blank=True, decimal_places=2, max_digits=50, default=0.01)
+    payment_type = models.CharField(choices=payment_type, max_length=50, blank=True, null=True)
     status = models.CharField(choices=payment_status, max_length=50, default='open')
+    status_code = models.PositiveIntegerField(blank=True, null=True)
+    code = models.CharField(max_length=200, blank=True, null=True)
+    redirect_url = models.URLField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Pagamento'
@@ -185,3 +189,7 @@ class Payment(models.Model):
         if not self.total:
             self.total = self.rental.total
         super(Payment, self).save(*args, **kwargs)
+
+    @classmethod
+    def create(cls, rental):
+        return cls(rental=rental, total=rental.total)

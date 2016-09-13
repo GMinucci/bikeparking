@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from parking.models import ParkingLot, Person, Rental
 from parking.service import get_nearby_queryset
 from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer, \
-    RentalListSerializer, RentalDetailSerializer, RentSerializer
+    RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer
+from payment import create_payment_attempt
 
 
 class ParkingLotViewSet(viewsets.ViewSet):
@@ -84,7 +85,7 @@ class RentalsViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Rental.objects.none()
     serializer_class = RentalListSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'post']
 
     def list(self, request):
         """
@@ -161,7 +162,7 @@ class RentalsViewSet(viewsets.ViewSet):
         rental = get_object_or_404(Rental, pk=pk, lodger__user=request.user)
         rental.end_time = timezone.now()
         rental.save()
-        serializer = RentalDetailSerializer(rental, many=False)
+        serializer = RedirectPaymentSerializer(create_payment_attempt(rental), many=False)
         return Response(serializer.data)
 
 

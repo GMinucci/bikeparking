@@ -1,5 +1,6 @@
 from django.contrib.gis.geos import Point
 import math
+from decimal import Decimal
 
 
 def get_nearby_queryset(lat, lng, radius=5000):
@@ -28,6 +29,6 @@ def get_rental_total_price(rental):
         delta_time = (rental.end_time - rental.start_time).total_seconds() // 3600
         _, total_hours = math.modf(delta_time)
         total = rental.parking_space.parking_lot.default_price
-        total += total_hours * rental.parking_space.parking_lot.per_hour_price
+        total += Decimal(total_hours) * rental.parking_space.parking_lot.per_hour_price
         return total
     return None

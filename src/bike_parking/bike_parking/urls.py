@@ -18,6 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('website.urls')),
+    url(r'^retorno/pagseguro/', include('pagseguro.urls')),
     url(r'^loccent/', admin.site.urls),
     url(r'^parking/', include('parking.urls')),
     url(r'^accounts/', include('allauth.urls')),

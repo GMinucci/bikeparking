@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'rest_framework_swagger',
+    'pagseguro',
     'parking',
     'website',
     'api',
@@ -182,3 +183,17 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
 }
+
+
+# DJANGO PAGSEGURO
+# Email de cobranca usado no pagseguro
+PAGSEGURO_EMAIL = 'garomi173@gmail.com'
+
+# Token gerado no sistema de url de retorno do pagseguro
+PAGSEGURO_TOKEN = '644F234DC8334AB0828773C79C0B5692'
+
+# Sandbox, true = ativo
+PAGSEGURO_SANDBOX = True
+
+# Se o valor for True, os checkouts e transacoes vao ser logadas no database
+PAGSEGURO_LOG_IN_MODEL = True
