@@ -148,7 +148,7 @@ class Rental(models.Model):
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
     start_time = models.DateTimeField('Data de inicio', blank=True)
     end_time = models.DateTimeField('Data de termino', blank=True, null=True)
-    total = models.DecimalField('Total', blank=True, null=True, decimal_places=2, max_digits=50, default=0.01)
+    total = models.DecimalField('Total', blank=True, null=True, decimal_places=2, max_digits=50)
 
     class Meta:
         verbose_name = 'Aluguel'
@@ -175,7 +175,7 @@ class Rental(models.Model):
 class Payment(models.Model):
     rental = models.ForeignKey(Rental, related_name='payments')
     date = models.DateTimeField('Data de pagamento', blank=True, null=True)
-    total = models.DecimalField('Total', blank=True, decimal_places=2, max_digits=50, default=0.01)
+    total = models.DecimalField('Total', blank=True, decimal_places=2, max_digits=50)
     payment_type = models.CharField(choices=payment_type, max_length=50, blank=True, null=True)
     status = models.CharField(choices=payment_status, max_length=50, default='open')
     status_code = models.PositiveIntegerField(blank=True, null=True)
