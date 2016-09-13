@@ -173,7 +173,7 @@ class Rental(models.Model):
 
 class Payment(models.Model):
     rental = models.ForeignKey(Rental, related_name='payments')
-    date = models.DateField('Data de pagamento', blank=True, null=True)
+    date = models.DateTimeField('Data de pagamento', blank=True, null=True)
     total = models.DecimalField('Total', blank=True, decimal_places=2, max_digits=50, default=0.01)
     payment_type = models.CharField(choices=payment_type, max_length=50, blank=True, null=True)
     status = models.CharField(choices=payment_status, max_length=50, default='open')
