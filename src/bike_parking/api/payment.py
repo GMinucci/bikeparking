@@ -2,6 +2,22 @@ from parking.models import Payment
 from pagseguro.api import PagSeguroItem, PagSeguroApi
 from decimal import Decimal
 
+payment_status_pagseguro = (
+    (1, 'open'),
+    (2, 'under_review'),
+    (3, 'confirmed'),
+    (7, 'refused'),
+)
+
+payment_type_pagseguro = (
+    (1, 'credit_card'),
+    (2, 'billet'),
+    (3, 'online_debit'),
+    (4, 'pagseguro_balance'),
+    (5, 'oi_paggo'),
+    (6, 'account_deposit'),
+)
+
 
 def create_payment_attempt(rental):
     payment = Payment.create(rental)
@@ -24,7 +40,6 @@ def create_pagseguro_cart(payment):
     data = cart.checkout()
     if data.get('success', False):
         payment.code = data.get('code')
-        payment.date = data.get('date')
         payment.redirect_url = data.get('redirect_url')
     payment.status_code = data.get('status_code')
     payment.save()
@@ -32,4 +47,9 @@ def create_pagseguro_cart(payment):
 
 
 def pagseguro_load_signal(sender, transaction, **kwargs):
-    print transaction
+    payment_reference = transaction.get('reference')
+    payment = Payment.objects.get(payment_reference=payment_reference)
+    payment.date = transaction.get('date')
+    payment.status = payment_status_pagseguro[transaction.get('status')]
+    payment.payment_type = payment_type_pagseguro[transaction.get('type')]
+    payment.save()

@@ -41,8 +41,11 @@ payment_status = (
 
 payment_type = (
     ('credit_card', 'Cartao de credito'),
-    ('debit_card', 'Cartao de debito'),
-    ('bank_slip', 'Transferencia bancaria'),
+    ('billet', 'Boleto'),
+    ('online_debit', 'Debito online'),
+    ('pagseguro_balance', 'Saldo PagSeguro'),
+    ('oi_paggo', 'Oi Paggo'),
+    ('account_deposit', 'Deposito em conta'),
 )
 
 
