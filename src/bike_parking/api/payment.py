@@ -50,6 +50,6 @@ def pagseguro_load_signal(sender, transaction, **kwargs):
     payment_reference = transaction.get('reference')
     payment = Payment.objects.get(id=payment_reference)
     payment.date = transaction.get('date')
-    payment.status = payment_status_pagseguro[int(transaction.get('status'))]
-    payment.payment_type = payment_type_pagseguro[int(transaction.get('type'))]
+    payment.status = dict(payment_status_pagseguro)[int(transaction.get('status'))]
+    payment.payment_type = dict(payment_status_pagseguro)[int(transaction.get('type'))]
     payment.save()
