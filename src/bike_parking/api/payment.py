@@ -3,19 +3,19 @@ from pagseguro.api import PagSeguroItem, PagSeguroApi
 from decimal import Decimal
 
 payment_status_pagseguro = (
-    ('1', 'open'),
-    ('2', 'under_review'),
-    ('3', 'confirmed'),
-    ('7', 'refused'),
+    (u'1', 'open'),
+    (u'2', 'under_review'),
+    (u'3', 'confirmed'),
+    (u'7', 'refused'),
 )
 
 payment_type_pagseguro = (
-    ('1', 'credit_card'),
-    ('2', 'billet'),
-    ('3', 'online_debit'),
-    ('4', 'pagseguro_balance'),
-    ('5', 'oi_paggo'),
-    ('6', 'account_deposit'),
+    (u'1', 'credit_card'),
+    (u'2', 'billet'),
+    (u'3', 'online_debit'),
+    (u'4', 'pagseguro_balance'),
+    (u'5', 'oi_paggo'),
+    (u'6', 'account_deposit'),
 )
 
 
