@@ -109,7 +109,7 @@ class ParkingLot(models.Model):
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
     number = models.PositiveIntegerField('Numero', blank=True)
-    status = models.CharField(choices=parking_space_status, max_length=20, default='idle')
+    status = models.CharField(choices=parking_space_status, max_length=20)
     bicycle = models.OneToOneField('Bicycle', related_name='parking_space', null=True, blank=True)
 
     class Meta:

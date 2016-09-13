@@ -22,7 +22,6 @@ def create_pagseguro_cart(payment):
     cart = PagSeguroApi(reference=payment.id)
     cart.add_item(create_pagseguro_item(payment.rental))
     data = cart.checkout()
-    print data
     if data.get('success', False):
         payment.code = data.get('code')
         payment.date = data.get('date')
