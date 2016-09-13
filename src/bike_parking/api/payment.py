@@ -48,7 +48,7 @@ def create_pagseguro_cart(payment):
 
 def pagseguro_load_signal(sender, transaction, **kwargs):
     payment_reference = transaction.get('reference')
-    payment = Payment.objects.get(payment_reference=payment_reference)
+    payment = Payment.objects.get(id=payment_reference)
     payment.date = transaction.get('date')
     payment.status = payment_status_pagseguro[transaction.get('status')]
     payment.payment_type = payment_type_pagseguro[transaction.get('type')]
