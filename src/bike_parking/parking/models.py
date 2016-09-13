@@ -167,7 +167,8 @@ class Rental(models.Model):
 
     def save(self, *args, **kwargs):
         self.update_rental_status()
-        self.total = get_rental_total_price(self)
+        if not self.total:
+            self.total = get_rental_total_price(self)
         super(Rental, self).save(*args, **kwargs)
 
 
