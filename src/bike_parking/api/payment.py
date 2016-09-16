@@ -20,12 +20,22 @@ payment_type_pagseguro = (
 
 
 def create_payment_attempt(rental):
+    """
+    Create a payment attempt
+    :param rental: Rental used to make a payment
+    :return: Payment object
+    """
     payment = Payment.create(rental)
     payment.save()
     return create_pagseguro_cart(payment)
 
 
 def create_pagseguro_item(rental):
+    """
+    Create PagSeguro item to add on Cart based on rental information
+    :param rental: Rental used to create the item
+    :return: PagSeguroItem
+    """
     two_decimals = Decimal(10) ** -2
     return PagSeguroItem(
         id=rental.id,
@@ -35,6 +45,11 @@ def create_pagseguro_item(rental):
 
 
 def create_pagseguro_cart(payment):
+    """
+    Create PagSeguro cart and make the checkout
+    :param payment: Payment used to make the cart and add the items
+    :return: Payment
+    """
     cart = PagSeguroApi(reference=payment.id)
     cart.add_item(create_pagseguro_item(payment.rental))
     data = cart.checkout()
@@ -47,6 +62,13 @@ def create_pagseguro_cart(payment):
 
 
 def pagseguro_load_signal(sender, transaction, **kwargs):
+    """
+    PagSeguro signal receiver to update payment from PagSeguro status
+    :param sender:
+    :param transaction:
+    :param kwargs:
+    :return:
+    """
     payment_reference = transaction.get('reference')
     payment = Payment.objects.get(id=payment_reference)
     payment.date = transaction.get('date')
