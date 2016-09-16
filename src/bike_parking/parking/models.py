@@ -53,6 +53,7 @@ class Person(models.Model):
     user = models.OneToOneField(User, related_name='Person')
     active = models.BooleanField('Ativo', default=True)
     phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
+    cpf = models.IntegerField('CPF', max_length=11)
 
     class Meta:
         verbose_name = 'Usuario'

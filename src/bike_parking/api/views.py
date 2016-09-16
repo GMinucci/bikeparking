@@ -54,13 +54,10 @@ class ParkingLotViewSet(viewsets.ViewSet):
         serializer = ParkingLotDetailSerializer(queryset, many=False)
         return Response(serializer.data)
 
-    @detail_route(permission_classes=[IsAuthenticated],
-                  authentication_classes=[SessionAuthentication, BasicAuthentication],
-                  methods=['post'])
+    @detail_route(methods=['post'])
     def rent(self, request, pk):
         """
-        **Requires authenticated user** \n
-        Start a Rental for one ParkingSpace
+        Start a Rental for the first empty ParkingSpace using the user's cpf
         ---
 
         serializer: api.serializers.RentSerializer
