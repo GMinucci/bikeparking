@@ -20,6 +20,7 @@ class PaymentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Payment
         fields = (
+            'id',
             'date',
             'total',
             'payment_type',
