@@ -63,6 +63,17 @@ class Person(models.Model):
     def __unicode__(self):
         return '%s %s' % (self.user.first_name, self.user.last_name)
 
+    @classmethod
+    def create(cls, person_data):
+        user = User()
+        user.username = person_data.get('email')
+        user.email = person_data.get('email')
+        user.first_name = person_data.get('first_name')
+        user.last_name = person_data.get('last_name')
+        user.set_password(person_data.get('password'))
+        user.save()
+        return cls(user=user, phone=person_data.get('phone'), cpf=person_data.get('cpf'))
+
 
 class Location(models.Model):
     cep = models.CharField('CEP', max_length=15)

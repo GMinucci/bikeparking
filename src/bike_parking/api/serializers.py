@@ -79,17 +79,7 @@ class PersonDetailSerializer(serializers.HyperlinkedModelSerializer):
         model = Person
         fields = (
             'phone',
-            'user',
-        )
-
-
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserDetailSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = Person
-        fields = (
-            'phone',
+            'cpf',
             'user',
         )
 
@@ -190,3 +180,12 @@ class PaymentDetailSerializer(serializers.HyperlinkedModelSerializer):
             'status',
             'redirect_url',
         )
+
+
+class PersonCreatorSerializer(serializers.Serializer):
+    phone = serializers.CharField()
+    cpf = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+    password = serializers.CharField()

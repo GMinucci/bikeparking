@@ -1,16 +1,16 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.http import  JsonResponse
-from rest_framework import viewsets, views
+from django.http import JsonResponse
+from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from parking.models import ParkingLot, Person, Rental, Payment
 from parking.service import get_nearby_queryset
-from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer, \
+from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, PersonDetailSerializer, \
     RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer, PaymentSerializer, \
-    PaymentDetailSerializer
+    PaymentDetailSerializer, PersonCreatorSerializer
 from payment import create_payment_attempt
 from django.db.models import Q
 
@@ -231,11 +231,17 @@ class PaymentViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class ProfileViewSet(views.APIView):
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
+class PersonViewSet(viewsets.ViewSet):
+    queryset = Person.objects.none()
+    serializer_class = PersonDetailSerializer
+    http_method_names = ['get', 'post']
 
-    def get(self, request):
+    @list_route(
+        methods=['get'],
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[SessionAuthentication, BasicAuthentication]
+    )
+    def profile(self, request):
         """
         **Requires authenticated user** \n
         Show current user profile
@@ -248,5 +254,15 @@ class ProfileViewSet(views.APIView):
               message: Forbidden
         """
         queryset = get_object_or_404(Person, user=request.user)
-        serializer = ProfileSerializer(queryset, many=False)
+        serializer = PersonDetailSerializer(queryset, many=False)
         return Response(serializer.data)
+
+    @list_route(methods=['post'])
+    def new(self, request):
+        data = dict(request.data.iteritems())
+        serializer = PersonCreatorSerializer(data=data)
+        if serializer.is_valid():
+            person = Person.create(serializer.data)
+            person.save()
+            return JsonResponse({'status': 'OK'})
+        return Response(serializer.errors)
