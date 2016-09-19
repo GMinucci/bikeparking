@@ -81,6 +81,17 @@ class ParkingLotViewSet(viewsets.ViewSet):
 
     @detail_route(methods=['post'])
     def close(self, request, pk):
+        """
+        Close one rental using PIN Code
+        ---
+
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 404
+              message: Not found
+        """
         data = dict(request.data.iteritems())
         rental = get_object_or_404(Rental, pin_code=data.get('pin'))
         rental.end_time = timezone.now()
@@ -184,11 +195,37 @@ class PaymentViewSet(viewsets.ViewSet):
     http_method_names = ['get']
 
     def list(self, request):
+        """
+        **Requires authenticated user** \n
+        Show payment list information
+        ---
+
+        serializer: api.serializers.PaymentSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+        """
         queryset = Payment.objects.filter(rental__lodger__user=request.user, status='open')
         serializer = PaymentSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
+        """
+        **Requires authenticated user** \n
+        Show payment detailed information
+        ---
+
+        serializer: api.serializers.PaymentDetailSerializer
+        omit_parameters:
+            - form
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+        """
         queryset = get_object_or_404(Payment, rental__lodger__user=request.user, pk=pk)
         serializer = PaymentDetailSerializer(queryset, many=False)
         return Response(serializer.data)
