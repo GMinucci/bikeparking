@@ -163,29 +163,6 @@ class RentalsViewSet(viewsets.ViewSet):
         serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
-    def close(self, request, pk):
-        """
-        **Requires authenticated user** \n
-        Close selected rental
-        ---
-
-        serializer: api.serializers.RentalDetailSerializer
-        omit_parameters:
-            - form
-
-        responseMessages:
-            - code: 403
-              message: Forbidden
-            - code: 404
-              message: Not found
-        """
-        rental = get_object_or_404(Rental, pk=pk, lodger__user=request.user)
-        rental.end_time = timezone.now()
-        rental.save()
-        serializer = RedirectPaymentSerializer(create_payment_attempt(rental), many=False)
-        return Response(serializer.data)
-
 
 class PaymentViewSet(viewsets.ViewSet):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
