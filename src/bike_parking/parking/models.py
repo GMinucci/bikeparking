@@ -6,6 +6,7 @@ from django.contrib.gis.geos import Point
 from django.utils import timezone
 from geopy.geocoders import GoogleV3
 from .service import get_rental_total_price
+import random
 
 # Models Enum declarations
 parking_space_status = (
@@ -150,6 +151,7 @@ class Rental(models.Model):
     start_time = models.DateTimeField('Data de inicio', blank=True)
     end_time = models.DateTimeField('Data de termino', blank=True, null=True)
     total = models.DecimalField('Total', blank=True, null=True, decimal_places=2, max_digits=50)
+    pin_code = models.CharField('Codigo PIN', blank=True, max_length=4)
 
     class Meta:
         verbose_name = 'Aluguel'
@@ -166,10 +168,18 @@ class Rental(models.Model):
         if self.start_time and self.end_time and self.rental_status == 'open':
             self.rental_status = 'closed'
 
+    def create_pin_code(self):
+        pin = random.randrange(0000, 9999)
+        if self.parking_space.rentals.filter(PINCode=pin, rental_status='open').exists():
+            return self.create_pin_code()
+        return pin
+
     def save(self, *args, **kwargs):
         self.update_rental_status()
         if not self.total:
             self.total = get_rental_total_price(self)
+        if not self.pin_code:
+            self.pin_code = self.create_pin_code()
         super(Rental, self).save(*args, **kwargs)
 
 
