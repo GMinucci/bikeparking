@@ -247,7 +247,7 @@ class PersonViewSet(viewsets.ViewSet):
         Show current user profile
         ---
 
-        serializer: api.serializers.ProfileSerializer
+        serializer: api.serializers.PersonDetailSerializer
 
         responseMessages:
             - code: 403
