@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.http import  JsonResponse
 from rest_framework import viewsets, views
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import detail_route, list_route
@@ -75,6 +76,14 @@ class ParkingLotViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+    @detail_route(methods=['post'])
+    def close(self, request, pk):
+        data = dict(request.data.iteritems())
+        rental = get_object_or_404(Rental, pin_code=data.get('pin'))
+        rental.end_time = timezone.now()
+        rental.save()
+        return JsonResponse({'status': 'OK'})
 
 
 class RentalsViewSet(viewsets.ViewSet):
