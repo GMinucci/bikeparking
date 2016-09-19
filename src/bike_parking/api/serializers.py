@@ -40,6 +40,7 @@ class RentalDetailSerializer(serializers.HyperlinkedModelSerializer):
             'end_time',
             'total',
             'payments',
+            'pin_code',
         )
 
 
@@ -170,5 +171,20 @@ class RedirectPaymentSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'rental',
             'total',
+            'redirect_url',
+        )
+
+
+class PaymentDetailSerializer(serializers.HyperlinkedModelSerializer):
+    rental = RentSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = (
+            'rental',
+            'date',
+            'total',
+            'payment_type',
+            'status',
             'redirect_url',
         )
