@@ -84,6 +84,7 @@ class ParkingLotViewSet(viewsets.ViewSet):
         rental = get_object_or_404(Rental, pin_code=data.get('pin'))
         rental.end_time = timezone.now()
         rental.save()
+        create_payment_attempt(rental)
         return JsonResponse({'status': 'OK'})
 
 
