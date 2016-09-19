@@ -12,6 +12,7 @@ from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, P
     RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer, PaymentSerializer, \
     PaymentDetailSerializer
 from payment import create_payment_attempt
+from django.db.models import Q
 
 
 class ParkingLotViewSet(viewsets.ViewSet):
@@ -135,7 +136,7 @@ class RentalsViewSet(viewsets.ViewSet):
     def history(self, request):
         """
         **Requires authenticated user** \n
-        Show user closed rental history list
+        Show user closed and paid rental history list
         ---
 
         serializer: api.serializers.RentalListSerializer
@@ -146,7 +147,8 @@ class RentalsViewSet(viewsets.ViewSet):
             - code: 403
               message: Forbidden
         """
-        queryset = Rental.objects.filter(lodger__user=request.user, rental_status='closed').order_by('start_time')
+        queryset = Rental.objects.filter(lodger__user=request.user).filter(~Q(rental_status='open')).\
+            order_by('start_time')
         serializer = RentalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
