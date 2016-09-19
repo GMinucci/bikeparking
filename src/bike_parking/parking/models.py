@@ -169,7 +169,7 @@ class Rental(models.Model):
             self.rental_status = 'closed'
 
     def create_pin_code(self):
-        pin = random.randrange(0000, 9999)
+        pin = random.randrange(1000, 9999)
         if self.parking_space.rentals.filter(pin_code=pin, rental_status='open').exists():
             return self.create_pin_code()
         return pin
