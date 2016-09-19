@@ -6,10 +6,11 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from parking.models import ParkingLot, Person, Rental
+from parking.models import ParkingLot, Person, Rental, Payment
 from parking.service import get_nearby_queryset
 from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, ProfileSerializer, \
-    RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer
+    RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer, PaymentSerializer, \
+    PaymentDetailSerializer
 from payment import create_payment_attempt
 
 
@@ -169,6 +170,24 @@ class RentalsViewSet(viewsets.ViewSet):
         rental.end_time = timezone.now()
         rental.save()
         serializer = RedirectPaymentSerializer(create_payment_attempt(rental), many=False)
+        return Response(serializer.data)
+
+
+class PaymentViewSet(viewsets.ViewSet):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    queryset = Payment.objects.none()
+    serializer_class = PaymentSerializer
+    http_method_names = ['get']
+
+    def list(self, request):
+        queryset = Payment.objects.filter(rental__lodger__user=request.user, status='open')
+        serializer = PaymentSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = get_object_or_404(Payment, rental__lodger__user=request.user, pk=pk)
+        serializer = PaymentDetailSerializer(queryset, many=False)
         return Response(serializer.data)
 
 
