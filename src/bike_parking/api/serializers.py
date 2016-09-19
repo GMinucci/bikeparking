@@ -182,6 +182,7 @@ class PaymentDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Payment
         fields = (
+            'id',
             'rental',
             'date',
             'total',
