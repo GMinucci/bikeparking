@@ -65,6 +65,9 @@ class ParkingLotViewSet(viewsets.ViewSet):
 
         serializer: api.serializers.RentSerializer
 
+        omit_parameters:
+            - lodger
+
         responseMessages:
             - code: 403
               message: Forbidden

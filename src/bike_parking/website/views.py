@@ -5,7 +5,7 @@ from parking.models import ParkingLot
 
 
 class IndexPage(TemplateView):
-    template_name = 'website/index.html'
+    template_name = 'website/landing_page.html'
 
 
 class LoginPage(TemplateView):
@@ -24,12 +24,21 @@ class AdminIndexPage(ListView):
         return super(AdminIndexPage, self).get(request, *args, **kwargs)
 
 
-class SystemIndexPage(ListView):
+class SystemIndexPage(TemplateView):
     template_name = 'website/system/index.html'
-    context_object_name = 'parkings'
-    queryset = ParkingLot.objects.filter(active=True)
+    # context_object_name = 'parkings'
+    # queryset = ParkingLot.objects.filter(active=True)
 
-    def get(self, request, *args, **kwargs):
-        if request.user.groups.filter(name='admin').exists():
-            return redirect(reverse('admin_index'))
-        return super(SystemIndexPage, self).get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     if request.user.groups.filter(name='admin').exists():
+    #         return redirect(reverse('admin_index'))
+    #     return super(SystemIndexPage, self).get(request, *args, **kwargs)
+
+
+class SystemOverviewPage(TemplateView):
+    template_name = 'website/system/overview/overview.html'
+
+
+class SystemParkingLotIndexPage(TemplateView):
+    template_name = 'website/system/parking_lot/index_parking_lot.html'
+
