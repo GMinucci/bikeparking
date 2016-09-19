@@ -259,6 +259,16 @@ class PersonViewSet(viewsets.ViewSet):
 
     @list_route(methods=['post'])
     def new(self, request):
+        """
+        Create new user
+        ---
+
+        serializer: api.serializers.PersonCreatorSerializer
+
+        responseMessages:
+            - code: 403
+              message: Forbidden
+        """
         data = dict(request.data.iteritems())
         serializer = PersonCreatorSerializer(data=data)
         if serializer.is_valid():
@@ -266,3 +276,6 @@ class PersonViewSet(viewsets.ViewSet):
             person.save()
             return JsonResponse({'status': 'OK'})
         return Response(serializer.errors)
+
+
+
