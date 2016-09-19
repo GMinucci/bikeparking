@@ -69,7 +69,7 @@ class ParkingLotViewSet(viewsets.ViewSet):
               message: Not found
         """
         data = dict(request.data.iteritems())
-        data['lodger'] = get_object_or_404(Person, user=request.user).pk
+        data['lodger'] = get_object_or_404(Person, cpf=data.get('cpf')).pk
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
