@@ -216,5 +216,15 @@ class SystemReportPerUnityPayments(ListView):
         return context
 
 
+class SystemReportRentals(ListView):
+    template_name = 'website/system/report/parking_space_rentals.html'
+    context_object_name = 'rentals'
+    queryset = Rental.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = Rental.objects.filter(parking_space__parking_lot__owner__user=request.user)
+        return super(SystemReportRentals, self).get(request, *args, **kwargs)
+
+
 class SystemUserIndexPage(TemplateView):
     template_name = 'website/system/user/index.html'
