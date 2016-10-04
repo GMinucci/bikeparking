@@ -4,7 +4,7 @@ from django.urls import reverse
 from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
     SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemUserIndexPage, \
     SystemAccountSettings, SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
-    SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace
+    SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace, SystemReportPerUnity, SystemReportPerUnityRentals
 from django.views.generic.base import RedirectView
 
 
@@ -34,6 +34,10 @@ urlpatterns = [
     url(r'^sistema/estacionamentos/',
         login_required(SystemParkingLotIndexPage.as_view()), name='estacionamentos'),
 
+    url(r'^sistema/relatorios/unidades/(?P<pk>[0-9]+)/alugueis/',
+        login_required(SystemReportPerUnityRentals.as_view()), name='relatorios-unidade-alugueis'),
+    url(r'^sistema/relatorios/unidades/',
+        login_required(SystemReportPerUnity.as_view()), name='relatorios-por-unidade'),
     url(r'^sistema/relatorios/',
         login_required(SystemReportIndexPage.as_view()), name='relatorios'),
 

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
-from parking.models import ParkingLot, Location, Person, ParkingSpace
+from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm
 from django.http import HttpResponse
 
@@ -96,7 +96,7 @@ class SystemParkingLotDetailView(View):
 
     def get(self, request, *args, **kwargs):
         parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
-        last_transactions = parking_lot.get_last_transactions(5)
+        last_transactions = parking_lot.get_last_transactions(True)
         view_objects = {
             'parking_lot': parking_lot,
             'last_transactions': last_transactions,
@@ -170,6 +170,34 @@ class SystemParkingLotSpaceEditSpace(View):
 
 class SystemReportIndexPage(TemplateView):
     template_name = 'website/system/report/index.html'
+
+
+class SystemReportPerUnity(ListView):
+    template_name = 'website/system/report/parking_space_report.html'
+    context_object_name = 'parkinglots'
+    queryset = ParkingLot.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name='admin').exists():
+            return redirect(reverse('resumo'))
+        self.queryset = ParkingLot.objects.filter(owner__user=request.user)
+        return super(SystemReportPerUnity, self).get(request, *args, **kwargs)
+
+
+class SystemReportPerUnityRentals(ListView):
+    template_name = 'website/system/report/parking_space_rental_report.html'
+    context_object_name = 'rentals'
+    queryset = Rental.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        self.queryset = parking_lot.get_last_transactions(False)
+        return super(SystemReportPerUnityRentals, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SystemReportPerUnityRentals, self).get_context_data(*args, **kwargs)
+        context['parking_lot'] = get_object_or_404(ParkingLot, id=self.kwargs['pk'])
+        return context
 
 
 class SystemUserIndexPage(TemplateView):

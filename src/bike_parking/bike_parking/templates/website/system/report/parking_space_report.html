@@ -1,28 +1,24 @@
 {% extends "website/system/index.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 
-    <h2 class="page-header">Estacionamentos</h2>
-
-    <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Novo estacionamento</a>
-
-    <br>
-    <br>
+    <h2 class="page-header">Relatórios por unidade</h2>
 
     <div class="panel panel-default">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Nome</th>
-                <th>Vagas</th>
                 <th>Endereço</th>
                 <th>Ativo</th>
+                <th>Relatórios</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             {% for parkinglot in parkinglots %}
                 <tr>
-                    <td><a href="{% url 'estacionamento-detalhe' parkinglot.id %}">{{ parkinglot.name }}</a></td>
-                    <td>{{ parkinglot.parking_spaces.count }}</td>
+                    <td>{{ parkinglot.name }}</td>
                     <td>{{ parkinglot.location }}</td>
                     <td>
                     {% if parkinglot.active %}
@@ -31,6 +27,10 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     {%  endif %}
                     </td>
+
+                    <td><a href="{% url "relatorios-unidade-alugueis" parkinglot.id %}">Aluguéis</a></td>
+                    <td><a href="{% url "adicionar-unidade" %}">Pagamentos</a></td>
+
                 </tr>
             {% endfor %}
             </tbody>

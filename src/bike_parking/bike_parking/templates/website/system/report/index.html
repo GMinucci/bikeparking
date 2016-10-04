@@ -1,6 +1,18 @@
 {% extends "website/system/index.html" %}
 {% block content %}
 
-    <p>pei pow estacionamentos</p>
+    <h2 class="page-header">Relatórios</h2>
+
+    <a href="{% url "relatorios-por-unidade" %}" class="btn btn-primary" role="button">Relatórios por unidade</a>
+
+    <br>
+    <br>
+
+    <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Relatórios de aluguéis</a>
+
+    <br>
+    <br>
+
+    <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Relatórios de pagamentos</a>
 
 {% endblock %}

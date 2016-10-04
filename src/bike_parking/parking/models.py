@@ -121,8 +121,10 @@ class ParkingLot(models.Model):
     def __unicode__(self):
         return self.name
 
-    def get_last_transactions(self, amount):
-        return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')[:amount]
+    def get_last_transactions(self, maxed):
+        if maxed:
+            return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')[:5]
+        return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')
 
 
 class ParkingSpace(models.Model):
