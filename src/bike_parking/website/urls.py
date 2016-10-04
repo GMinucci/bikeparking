@@ -1,17 +1,21 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from . import views
+from django.urls import reverse
+from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
+    SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemUserIndexPage, \
+    SystemAccountSettings, SystemOverviewRedirectPage
 from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
-    url(r'^$', views.IndexPage.as_view(), name='index'),
-    url(r'^admin/', login_required(views.AdminIndexPage.as_view()), name='admin_index'),
-    url(r'^sistema/resumo/', login_required(views.SystemOverviewPage.as_view()), name='resumo'),
-    url(r'^sistema/estacionamentos/adicionar-unidade', login_required(views.SystemParkingLotInsertUnity.as_view()), name='adicionar-unidade'),
-    url(r'^sistema/estacionamentos/', login_required(views.SystemParkingLotIndexPage.as_view()), name='estacionamentos'),
-    url(r'^sistema/relatorios/', login_required(views.SystemReportIndexPage.as_view()), name='relatorios'),
-    url(r'^sistema/usuarios/', login_required(views.SystemUserIndexPage.as_view()), name='usuarios'),
-    url(r'^sistema/configuracoes/', login_required(views.SystemAccountSettings.as_view()), name='configuracoes-conta'),
-    url(r'^sistema/', RedirectView.as_view(url='resumo/')),
+    url(r'^$', IndexPage.as_view(), name='index'),
+    url(r'^admin/', login_required(AdminIndexPage.as_view()), name='admin_index'),
+    url(r'^sistema/resumo/', login_required(SystemOverviewPage.as_view()), name='resumo'),
+    url(r'^sistema/adicionar-unidade/nova-localizacao/', login_required(SystemParkingLotInsertLocationFormView.as_view()), name='nova-localizacao'),
+    url(r'^sistema/adicionar-unidade/', login_required(SystemParkingLotInsertUnity.as_view()), name='adicionar-unidade'),
+    url(r'^sistema/estacionamentos/', login_required(SystemParkingLotIndexPage.as_view()), name='estacionamentos'),
+    url(r'^sistema/relatorios/', login_required(SystemReportIndexPage.as_view()), name='relatorios'),
+    url(r'^sistema/usuarios/', login_required(SystemUserIndexPage.as_view()), name='usuarios'),
+    url(r'^sistema/configuracoes/', login_required(SystemAccountSettings.as_view()), name='configuracoes-conta'),
+    url(r'^sistema/', login_required(SystemOverviewRedirectPage.as_view())),
 ]

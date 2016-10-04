@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
 from django.urls import reverse
-from django.views.generic import TemplateView, ListView
-from django.shortcuts import redirect
-from parking.models import ParkingLot
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
+from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import render
+from parking.models import ParkingLot, Location, Person
+from forms import LocationForm, ParkingLotForm
+from django.http import HttpResponse
 
 
 class IndexPage(TemplateView):
@@ -19,20 +23,13 @@ class AdminIndexPage(ListView):
 
     def get(self, request, *args, **kwargs):
         if not request.user.groups.filter(name='admin').exists():
-            return redirect(reverse('system_index'))
+            return redirect(reverse('resumo'))
         self.queryset = ParkingLot.objects.filter(owner__user=request.user)
         return super(AdminIndexPage, self).get(request, *args, **kwargs)
 
 
 class SystemIndexPage(TemplateView):
     template_name = 'website/system/index.html'
-    # context_object_name = 'parkings'
-    # queryset = ParkingLot.objects.filter(active=True)
-
-    # def get(self, request, *args, **kwargs):
-    #     if request.user.groups.filter(name='admin').exists():
-    #         return redirect(reverse('admin_index'))
-    #     return super(SystemIndexPage, self).get(request, *args, **kwargs)
 
 
 class SystemAccountSettings(TemplateView):
@@ -43,6 +40,13 @@ class SystemOverviewPage(TemplateView):
     template_name = 'website/system/overview/index.html'
 
 
+class SystemOverviewRedirectPage(TemplateView):
+    template_name = 'website/system/overview/index.html'
+
+    def get(self, request, *args, **kwargs):
+        return redirect(reverse('resumo'))
+
+
 class SystemParkingLotIndexPage(ListView):
     template_name = 'website/system/parking_lot/index.html'
     context_object_name = 'parkinglots'
@@ -50,13 +54,38 @@ class SystemParkingLotIndexPage(ListView):
 
     def get(self, request, *args, **kwargs):
         if not request.user.groups.filter(name='admin').exists():
-            return redirect(reverse('system_index'))
+            return redirect(reverse('resumo'))
         self.queryset = ParkingLot.objects.filter(owner__user=request.user)
         return super(SystemParkingLotIndexPage, self).get(request, *args, **kwargs)
 
 
-class SystemParkingLotInsertUnity(TemplateView):
-    template_name = 'website/system/parking_lot/new-parking-lot.html'
+class SystemParkingLotInsertLocationFormView(CreateView):
+    model = Location
+    template_name = 'website/system/parking_lot/location-form.html'
+    form_class = LocationForm
+    success_url = '/sistema/estacionamentos/'
+
+
+class SystemParkingLotInsertUnity(View):
+
+    def get(self, request, *args, **kwargs):
+        forms = {
+            u'Localização': LocationForm,
+            u'Estacionamento': ParkingLotForm,
+        }
+        return render(request, 'website/system/parking_lot/new-parking-lot.html', {'forms': forms})
+
+    def post(self, request, *args, **kwargs):
+        location = LocationForm(request.POST)
+        parking_lot = ParkingLotForm(request.POST)
+        if location.is_valid() and parking_lot.is_valid():
+            location_instance = location.save()
+            parking_lot_instance = parking_lot.save(commit=False)
+            parking_lot_instance.location = location_instance
+            parking_lot_instance.owner = get_object_or_404(Person, user__id=request.user.id)
+            parking_lot_instance.save()
+            return redirect('estacionamentos')
+        return HttpResponse(location.errors)
 
 
 class SystemReportIndexPage(TemplateView):

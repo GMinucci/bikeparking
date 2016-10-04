@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'pagseguro',
+    'crispy_forms',
     'parking',
     'website',
     'api',
@@ -197,3 +198,7 @@ PAGSEGURO_SANDBOX = True
 
 # Se o valor for True, os checkouts e transacoes vao ser logadas no database
 PAGSEGURO_LOG_IN_MODEL = True
+
+
+# CRISPY SETTINGS
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
