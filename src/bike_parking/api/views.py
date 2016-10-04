@@ -6,7 +6,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from parking.models import ParkingLot, Person, Rental, Payment
+from parking.models import ParkingLot, Person, Rental, Payment, ParkingSpace
 from parking.service import get_nearby_queryset
 from .serializers import ParkingLotListSerializer, ParkingLotDetailSerializer, PersonDetailSerializer, \
     RentalListSerializer, RentalDetailSerializer, RentSerializer, RedirectPaymentSerializer, PaymentSerializer, \
@@ -76,6 +76,8 @@ class ParkingLotViewSet(viewsets.ViewSet):
         """
         data = dict(request.data.iteritems())
         data['lodger'] = get_object_or_404(Person, cpf=data.get('cpf')).pk
+        correct_space_id = get_object_or_404(ParkingSpace, number=data['parking_space'], parking_lot__id=pk).id
+        data['parking_space'] = correct_space_id
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
