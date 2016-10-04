@@ -22,7 +22,7 @@
         {% for parkinglot in parkinglots %}
             <tr>
                 <td>{{ parkinglot.id }}</td>
-                <td>{{ parkinglot.name }}</td>
+                <td><a href="{% url 'estacionamento-detalhe' parkinglot.id %}">{{ parkinglot.name }}</a></td>
                 <td>{{ parkinglot.parking_spaces.count }}</td>
                 <td>{{ parkinglot.location }}</td>
                 <td>

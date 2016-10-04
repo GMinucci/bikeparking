@@ -85,7 +85,32 @@ class SystemParkingLotInsertUnity(View):
             parking_lot_instance.owner = get_object_or_404(Person, user__id=request.user.id)
             parking_lot_instance.save()
             return redirect('estacionamentos')
-        return HttpResponse(location.errors)
+
+        if not location.is_valid():
+            return HttpResponse(location.errors)
+        else:
+            return HttpResponse(parking_lot.errors)
+
+
+class SystemParkingLotDetailView(View):
+
+    def get(self, request, *args, **kwargs):
+        parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        view_objects = {
+            'parking_lot': parking_lot,
+            'form': ParkingLotForm(instance=parking_lot),
+        }
+        return render(request, 'website/system/parking_lot/detail.html', view_objects)
+
+    def post(self, request, *args, **kwargs):
+        instance = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        parking_lot = ParkingLotForm(request.POST, instance=instance)
+        if parking_lot.is_valid():
+            parking_lot.save()
+            return redirect('estacionamentos')
+        return HttpResponse(parking_lot.errors)
+
+    # template_name = 'website/system/parking_lot/detail.html'
 
 
 class SystemReportIndexPage(TemplateView):
