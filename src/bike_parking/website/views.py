@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
-from parking.models import ParkingLot, Location, Person
+from parking.models import ParkingLot, Location, Person, ParkingSpace
 from forms import LocationForm, ParkingLotForm
 from django.http import HttpResponse
 
@@ -127,6 +127,16 @@ class SystemParkingLotLocationEditView(View):
             location.save()
             return redirect('estacionamento-detalhe', kwargs['pk'])
         return HttpResponse(location.errors)
+
+
+class SystemParkingLotSpacesList(ListView):
+    template_name = 'website/system/parking_lot/parking_space_list.html'
+    context_object_name = 'spaces'
+    queryset = ParkingSpace.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = ParkingSpace.objects.filter(parking_lot__id=kwargs['pk'])
+        return super(SystemParkingLotSpacesList, self).get(request, *args, **kwargs)
 
 
 class SystemReportIndexPage(TemplateView):

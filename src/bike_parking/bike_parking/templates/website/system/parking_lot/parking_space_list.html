@@ -1,0 +1,31 @@
+{% extends "website/system/index.html" %}
+{% block content %}
+
+    <h2 class="page-header">{{ parking_lot.name }}</h2>
+
+    <a href="{% url "relatorios" %}" class="btn btn-primary" role="button">Nova vaga</a>
+
+    <br>
+    <br>
+
+    <div class="panel panel-default">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for parking_space in spaces %}
+
+                <tr>
+                    <td>{{ parking_space.id }}</td>
+                    <td>{{ parking_space.get_status_display }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

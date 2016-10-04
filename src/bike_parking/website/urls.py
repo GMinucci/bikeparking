@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
     SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemUserIndexPage, \
-    SystemAccountSettings, SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView
+    SystemAccountSettings, SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
+    SystemParkingLotSpacesList
 from django.views.generic.base import RedirectView
 
 
@@ -17,6 +18,7 @@ urlpatterns = [
     url(r'^sistema/adicionar-unidade/nova-localizacao/', login_required(SystemParkingLotInsertLocationFormView.as_view()), name='nova-localizacao'),
     url(r'^sistema/adicionar-unidade/', login_required(SystemParkingLotInsertUnity.as_view()), name='adicionar-unidade'),
 
+    url(r'^sistema/estacionamentos/(?P<pk>[0-9]+)/vagas/', login_required(SystemParkingLotSpacesList.as_view()), name='estacionamento-detalhe-vagas'),
     url(r'^sistema/estacionamentos/(?P<pk>[0-9]+)/editar-localizacao/', login_required(SystemParkingLotLocationEditView.as_view()), name='estacionamento-detalhe-localizacao'),
     url(r'^sistema/estacionamentos/(?P<pk>[0-9]+)/', login_required(SystemParkingLotDetailView.as_view()), name='estacionamento-detalhe'),
     url(r'^sistema/estacionamentos/', login_required(SystemParkingLotIndexPage.as_view()), name='estacionamentos'),

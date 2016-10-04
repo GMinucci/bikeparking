@@ -5,10 +5,12 @@
 
     <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Novo estacionamento</a>
 
-    <div class="table-responsive">
     <br>
-    <table class="table table-striped">
-        <thead>
+    <br>
+
+    <div class="panel panel-default">
+        <table class="table table-striped">
+            <thead>
             <tr>
                 <th>#</th>
                 <th>Nome</th>
@@ -16,26 +18,25 @@
                 <th>Endereço</th>
                 <th>Ativo</th>
             </tr>
-        </thead>
-
-        <tbody>
-        {% for parkinglot in parkinglots %}
-            <tr>
-                <td>{{ parkinglot.id }}</td>
-                <td><a href="{% url 'estacionamento-detalhe' parkinglot.id %}">{{ parkinglot.name }}</a></td>
-                <td>{{ parkinglot.parking_spaces.count }}</td>
-                <td>{{ parkinglot.location }}</td>
-                <td>
-                {% if parkinglot.active %}
-                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                {%  endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for parkinglot in parkinglots %}
+                <tr>
+                    <td>{{ parkinglot.id }}</td>
+                    <td><a href="{% url 'estacionamento-detalhe' parkinglot.id %}">{{ parkinglot.name }}</a></td>
+                    <td>{{ parkinglot.parking_spaces.count }}</td>
+                    <td>{{ parkinglot.location }}</td>
+                    <td>
+                    {% if parkinglot.active %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {%  endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}
