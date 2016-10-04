@@ -6,6 +6,35 @@
 
 {#    <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Novo estacionamento</a>#}
 
+    <div class="panel panel-default">
+        <div class="panel-heading">Resumo de transações</div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Usuário</th>
+                <th>Tipo de transação</th>
+                <th>Status</th>
+                <th>Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in last_transactions %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td>{{ transaction.lodger }}</td>
+                    <td>{{ transaction.get_rental_type_display }}</td>
+                    <td>{{ transaction.get_rental_status_display }}</td>
+                    {% if transaction.end_time %}
+                        <td>{{ transaction.end_time|date:"j/n/Y G:i" }}</td>
+                    {% else %}
+                        <td>{{ transaction.start_time|date:"j/n/Y G:i" }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading">

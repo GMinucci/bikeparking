@@ -96,8 +96,10 @@ class SystemParkingLotDetailView(View):
 
     def get(self, request, *args, **kwargs):
         parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        last_transactions = parking_lot.get_last_transactions(5)
         view_objects = {
             'parking_lot': parking_lot,
+            'last_transactions': last_transactions,
             'form': ParkingLotForm(instance=parking_lot),
         }
         return render(request, 'website/system/parking_lot/detail.html', view_objects)

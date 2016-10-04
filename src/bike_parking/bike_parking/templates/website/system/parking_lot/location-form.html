@@ -4,10 +4,22 @@
 
     <h2 class="page-header">Localização</h2>
 
-    <form action="." method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Salvar" class="btn btn-success">
-    </form>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Localização</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+                <form action="." method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="submit" value="Salvar" class="btn btn-success">
+                </form>
+
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

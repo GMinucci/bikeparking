@@ -121,6 +121,9 @@ class ParkingLot(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_last_transactions(self, amount):
+        return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')[:amount]
+
 
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
@@ -161,6 +164,7 @@ class Rental(models.Model):
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
     start_time = models.DateTimeField('Data de inicio', blank=True)
     end_time = models.DateTimeField('Data de termino', blank=True, null=True)
+    last_update = models.DateTimeField('Ultima atualizacao')
     total = models.DecimalField('Total', blank=True, null=True, decimal_places=2, max_digits=50)
     pin_code = models.CharField('Codigo PIN', blank=True, max_length=4)
 
@@ -191,6 +195,7 @@ class Rental(models.Model):
             self.total = get_rental_total_price(self)
         if not self.pin_code:
             self.pin_code = self.create_pin_code()
+        self.last_update = timezone.now()
         super(Rental, self).save(*args, **kwargs)
 
 
