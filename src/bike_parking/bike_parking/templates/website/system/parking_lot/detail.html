@@ -34,9 +34,10 @@
         </table>
     </div>
 
-    <a href="{% url "relatorios" %}" class="btn btn-primary" role="button">Histórico completo</a>
     <a href="{% url "estacionamento-detalhe-vagas" parking_lot.id %}" class="btn btn-primary" role="button">Editar vagas</a>
     <a href="{% url 'estacionamento-detalhe-localizacao' parking_lot.id %}" class="btn btn-primary" role="button">Editar localização</a>
+    <a href="{% url "relatorios-unidade-alugueis" parking_lot.id %}" class="btn btn-primary" role="button">Histórico de aluguéis</a>
+    <a href="{% url "relatorios-unidade-pagamentos" parking_lot.id %}" class="btn btn-primary" role="button">Histórico de pagamentos</a>
 
     <br>
     <br>
