@@ -195,7 +195,23 @@ class SystemReportPerUnityRentals(ListView):
         return super(SystemReportPerUnityRentals, self).get(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context = super(SystemReportPerUnityRentals, self).get_context_data(*args, **kwargs)
+        context = super(SystemReportPerUnityRentals, self).get_context_data(**kwargs)
+        context['parking_lot'] = get_object_or_404(ParkingLot, id=self.kwargs['pk'])
+        return context
+
+
+class SystemReportPerUnityPayments(ListView):
+    template_name = 'website/system/report/parking_space_payment_report.html'
+    context_object_name = 'payments'
+    queryset = Payment.objects.none()
+
+    def get(self, request, *args, **kwargs):
+        parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        self.queryset = parking_lot.get_last_payments(False)
+        return super(SystemReportPerUnityPayments, self).get(request, *args, **kwargs)
+
+    def get_context_data(self,*args ,**kwargs):
+        context = super(SystemReportPerUnityPayments, self).get_context_data(**kwargs)
         context['parking_lot'] = get_object_or_404(ParkingLot, id=self.kwargs['pk'])
         return context
 

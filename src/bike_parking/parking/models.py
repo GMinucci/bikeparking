@@ -126,6 +126,11 @@ class ParkingLot(models.Model):
             return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')[:5]
         return Rental.objects.filter(parking_space__parking_lot=self).order_by('-last_update')
 
+    def get_last_payments(self, maxed):
+        if maxed:
+            return Payment.objects.filter(rental__parking_space__parking_lot=self).order_by('-date')[:5]
+        return Payment.objects.filter(rental__parking_space__parking_lot=self).order_by('-date')
+
 
 class ParkingSpace(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='parking_spaces')
