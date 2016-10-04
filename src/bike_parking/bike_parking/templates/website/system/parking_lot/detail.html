@@ -4,8 +4,6 @@
 
     <h2 class="page-header">{{ parking_lot.name }}</h2>
 
-{#    <a href="{% url "adicionar-unidade" %}" class="btn btn-primary" role="button">Novo estacionamento</a>#}
-
     <div class="panel panel-default">
         <div class="panel-heading">Resumo de transações</div>
         <table class="table table-striped">
@@ -36,12 +34,20 @@
         </table>
     </div>
 
+    <a href="{% url "relatorios" %}" class="btn btn-primary" role="button">Histórico completo</a>
+    <a href="{% url "relatorios" %}" class="btn btn-primary" role="button">Editar vagas</a>
+    <a href="{% url 'estacionamento-detalhe-localizacao' parking_lot.id %}" class="btn btn-primary" role="button">Editar localização</a>
+
+    <br>
+    <br>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Detalhes</h3>
         </div>
 
         <div class="panel-body">
+
             <div class="panel-body">
                 <form action="." method="post">
 

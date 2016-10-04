@@ -112,7 +112,21 @@ class SystemParkingLotDetailView(View):
             return redirect('estacionamentos')
         return HttpResponse(parking_lot.errors)
 
-    # template_name = 'website/system/parking_lot/detail.html'
+
+class SystemParkingLotLocationEditView(View):
+
+    def get(self, request, *args, **kwargs):
+        parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        return render(request, 'website/system/parking_lot/location-form.html',
+                      {'form': LocationForm(instance=parking_lot.location)})
+
+    def post(self, request, *args, **kwargs):
+        parking_lot_instance = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        location = LocationForm(request.POST, instance=parking_lot_instance.location)
+        if location.is_valid():
+            location.save()
+            return redirect('estacionamento-detalhe', kwargs['pk'])
+        return HttpResponse(location.errors)
 
 
 class SystemReportIndexPage(TemplateView):
