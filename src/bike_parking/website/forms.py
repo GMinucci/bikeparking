@@ -3,7 +3,7 @@ from django import forms
 # from crispy_forms.helper import FormHelper
 # from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 # from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
-from parking.models import Location, ParkingLot
+from parking.models import Location, ParkingLot, ParkingSpace
 
 
 class LocationForm(forms.ModelForm):
@@ -34,4 +34,13 @@ class ParkingLotForm(forms.ModelForm):
             'default_price',
             'per_hour_price',
             'active',
+        )
+
+
+class ParkingSpaceForm(forms.ModelForm):
+
+    class Meta:
+        model = ParkingSpace
+        fields = (
+            'status',
         )

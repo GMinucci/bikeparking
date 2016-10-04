@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from parking.models import ParkingLot, Location, Person, ParkingSpace
-from forms import LocationForm, ParkingLotForm
+from forms import LocationForm, ParkingLotForm, ParkingSpaceForm
 from django.http import HttpResponse
 
 
@@ -138,6 +138,35 @@ class SystemParkingLotSpacesList(ListView):
         self.queryset = ParkingSpace.objects.filter(parking_lot__id=kwargs['pk'])
         return super(SystemParkingLotSpacesList, self).get(request, *args, **kwargs)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(SystemParkingLotSpacesList, self).get_context_data(*args, **kwargs)
+        context['parking_lot'] = get_object_or_404(ParkingLot, id=self.kwargs['pk'])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        ParkingSpace.objects.create(
+            status='idle',
+            parking_lot=parking_lot,
+        )
+        return redirect('estacionamento-detalhe-vagas', kwargs['pk'])
+
+
+class SystemParkingLotSpaceEditSpace(View):
+
+    def get(self, request, *args, **kwargs):
+        parking_space = get_object_or_404(ParkingSpace, id=kwargs['space_pk'])
+        return render(request, 'website/system/parking_lot/parking_space_form.html',
+                      {'form': ParkingSpaceForm(instance=parking_space)})
+
+    def post(self, request, *args, **kwargs):
+        parking_space_instance = get_object_or_404(ParkingSpace, id=kwargs['space_pk'])
+        parking_space = ParkingSpaceForm(request.POST, instance=parking_space_instance)
+        if parking_space.is_valid():
+            parking_space.save()
+            return redirect('estacionamento-detalhe-vagas', kwargs['pk'])
+        return HttpResponse(parking_space.errors)
+
 
 class SystemReportIndexPage(TemplateView):
     template_name = 'website/system/report/index.html'
@@ -145,5 +174,3 @@ class SystemReportIndexPage(TemplateView):
 
 class SystemUserIndexPage(TemplateView):
     template_name = 'website/system/user/index.html'
-
-

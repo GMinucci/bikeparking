@@ -1,27 +1,30 @@
 {% extends "website/system/index.html" %}
 {% block content %}
 
-    <h2 class="page-header">{{ parking_lot.name }}</h2>
+    <h2 class="page-header">{{ parking_lot }}</h2>
 
-    <a href="{% url "relatorios" %}" class="btn btn-primary" role="button">Nova vaga</a>
+    <form action="." method="post">
+        {% csrf_token %}
+        <input type="submit" value="Nova vaga" class="btn btn-success">
+    </form>
 
-    <br>
     <br>
 
     <div class="panel panel-default">
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>#</th>
+                <th>Número</th>
                 <th>Status</th>
+{#                <th>ID</th>#}
             </tr>
             </thead>
             <tbody>
             {% for parking_space in spaces %}
-
                 <tr>
-                    <td>{{ parking_space.id }}</td>
-                    <td>{{ parking_space.get_status_display }}</td>
+                    <td>{{ parking_space.number }}</td>
+                    <td><a href="{% url 'estacionamento-detalhe-vagas-editar' parking_lot.id parking_space.id %}">{{ parking_space.get_status_display }}</a></td>
+{#                    <td>{{ parking_space.id }}</td>#}
                 </tr>
             {% endfor %}
             </tbody>
