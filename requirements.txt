@@ -10,3 +10,4 @@ psycopg2
 django-rest-swagger==0.3.8
 django-pagseguro2
 django-crispy-forms
+python-dateutil==2.5.3
