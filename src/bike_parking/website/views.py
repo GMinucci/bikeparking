@@ -6,6 +6,7 @@ from django.shortcuts import render
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm
 from django.http import HttpResponse
+from parking.reports import rentals_per_parking_lot_each_month, latest_transactions
 
 
 class IndexPage(TemplateView):
@@ -36,8 +37,14 @@ class SystemAccountSettings(TemplateView):
     template_name = 'website/system/account/settings.html'
 
 
-class SystemOverviewPage(TemplateView):
-    template_name = 'website/system/overview/index.html'
+class SystemOverviewPage(View):
+
+    def get(self, request, *args, **kwargs):
+        view_parameters = {
+            'rental_month_report': rentals_per_parking_lot_each_month(request.user),
+            'latest_transactions': latest_transactions(request.user, 20),
+        }
+        return render(request, 'website/system/overview/index.html', view_parameters)
 
 
 class SystemOverviewRedirectPage(TemplateView):

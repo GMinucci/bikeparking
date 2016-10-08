@@ -209,6 +209,7 @@ class Rental(models.Model):
 class Payment(models.Model):
     rental = models.ForeignKey(Rental, related_name='payments')
     date = models.DateTimeField('Data de pagamento', blank=True, null=True)
+    last_update = models.DateTimeField('Ultima atualizacao')
     total = models.DecimalField('Total', blank=True, decimal_places=2, max_digits=50)
     payment_type = models.CharField(choices=payment_type, max_length=50, blank=True, null=True)
     status = models.CharField(choices=payment_status, max_length=50, default='open')
@@ -226,6 +227,7 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         if not self.total:
             self.total = self.rental.total
+        self.last_update = timezone.now()
         super(Payment, self).save(*args, **kwargs)
 
     @classmethod
