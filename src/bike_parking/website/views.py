@@ -247,7 +247,6 @@ class SystemReportRentalDetail(View):
                 'cpf': rental.lodger.cpf
             })
         parking_lot_form = ParkingLotForm(instance=rental.parking_space.parking_lot)
-        print rental.lodger.user.first_name
         return render(request, 'website/system/report/detail/rental_detail.html',
                       {'rental_form': rental_form,
                        'user_form': user_form,

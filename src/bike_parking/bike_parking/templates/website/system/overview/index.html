@@ -34,7 +34,7 @@
                 <tr>
                 <td>
                     {% if transaction.transaction_type == 'Aluguel' %}
-                        <a href="{% url 'relatorios-alugueis-detalhe' transaction.id %}">
+                        <a href="{% url "relatorios-alugueis-detalhe" transaction.id %}">
                     {% else %}
                         <a>
                     {% endif %}
