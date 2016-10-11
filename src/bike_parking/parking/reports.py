@@ -6,6 +6,7 @@ from django.utils import timezone
 
 
 class ConciseTransaction:
+    id = None
     transaction_type = None
     status = None
     date = None
@@ -17,11 +18,13 @@ class ConciseTransaction:
             self.status = input.get_rental_status_display()
             self.date = input.last_update
             self.parking_lot_name = input.parking_space.parking_lot.name
+            self.id = input.id
         else:
             self.transaction_type = 'Pagamento'
             self.status = input.get_status_display()
             self.date = input.last_update
             self.parking_lot_name = input.rental.parking_space.parking_lot.name
+            self.id = input.id
 
 
 def set_range_month_filter(date):

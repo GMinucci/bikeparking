@@ -1,0 +1,56 @@
+{% extends "website/system/index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <h1 class="page-header">Aluguel #{{ rental_id }}</h1>
+
+    <form action="." method="post">
+    <fieldset disabled>
+    {% csrf_token %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Aluguel</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ rental_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Usuário</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ user_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Estacionamento</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ parking_lot_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    </fieldset>
+    </form>
+
+{%  endblock %}

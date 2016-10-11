@@ -3,7 +3,7 @@ from django import forms
 # from crispy_forms.helper import FormHelper
 # from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 # from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
-from parking.models import Location, ParkingLot, ParkingSpace
+from parking.models import Location, ParkingLot, ParkingSpace, Rental
 
 
 class LocationForm(forms.ModelForm):
@@ -44,3 +44,27 @@ class ParkingSpaceForm(forms.ModelForm):
         fields = (
             'status',
         )
+
+
+class RentalDetailForm(forms.ModelForm):
+
+    class Meta:
+        model = Rental
+        fields = (
+            'parking_space',
+            'rental_type',
+            'rental_status',
+            'start_time',
+            'end_time',
+            'total',
+            'pin_code',
+        )
+
+
+class PersonDetailForm(forms.Form):
+    name = forms.CharField(label='Nome', max_length=100)
+    surname = forms.CharField(label='Sobrenome', max_length=100)
+    email = forms.CharField(label='Email', max_length=100)
+    phone = forms.CharField(label='Telefone', max_length=100)
+    cpf = forms.CharField(label='CPF', max_length=11)
+    active = forms.BooleanField(label='Ativo')

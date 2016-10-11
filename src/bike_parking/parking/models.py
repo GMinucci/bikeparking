@@ -148,7 +148,7 @@ class ParkingSpace(models.Model):
         super(ParkingSpace, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "%i- %s - %s" % (self.number, self.get_status_display(), self.parking_lot)
+        return "%i" % self.number
 
 
 class Bicycle(models.Model):
@@ -166,7 +166,7 @@ class Bicycle(models.Model):
 
 class Rental(models.Model):
     lodger = models.ForeignKey(Person, related_name='rentals')
-    parking_space = models.ForeignKey(ParkingSpace, related_name='rentals')
+    parking_space = models.ForeignKey(ParkingSpace, verbose_name='Vaga', related_name='rentals')
     rental_type = models.CharField('Tipo de locacao', choices=rental_type, max_length=50)
     rental_status = models.CharField('Status da locacao', choices=rental_status, max_length=50, blank=True)
     start_time = models.DateTimeField('Data de inicio', blank=True)

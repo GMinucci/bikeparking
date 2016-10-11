@@ -32,7 +32,13 @@
             {% for transaction in latest_transactions %}
 
                 <tr>
-                <td>{{ transaction.transaction_type }}</td>
+                <td>
+                    {% if transaction.transaction_type == 'Aluguel' %}
+                        <a href="{% url 'relatorios-alugueis-detalhe' transaction.id %}">
+                    {% else %}
+                        <a>
+                    {% endif %}
+                    {{ transaction.transaction_type }}</a></td>
                 <td>{{ transaction.status }}</td>
                 <td>{{ transaction.date }}</td>
                 <td>{{ transaction.parking_lot_name }}</td>
