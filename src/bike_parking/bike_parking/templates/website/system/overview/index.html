@@ -1,20 +1,12 @@
 {% extends "website/system/index.html" %}
+{% load space_literal_status %}
 {% block content %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <h1 class="page-header">Resumo</h1>
         <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder" id="rental_month_report" style="width: 500px; height: 300px;"></div>
-{#            <div class="col-xs-6 col-sm-3 placeholder">#}
-{#                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">#}
-{#                <h4>Label</h4>#}
-{#                <span class="text-muted">Something else</span>#}
-{#            </div>#}
-{#            <div class="col-xs-6 col-sm-3 placeholder">#}
-{#                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">#}
-{#                <h4>Label</h4>#}
-{#                <span class="text-muted">Something else</span>#}
-{#            </div>#}
+            <div class="col-xs-6 col-sm-3 placeholder" id="rental_month_report" style="width: 400px; height: 300px;"></div>
+            <div class="col-xs-6 col-sm-3 placeholder" id="parking_space_report" style="width: 400px; height: 300px;"></div>
         </div>
     <h2 class="sub-header">Últimas transações</h2>
 
@@ -56,8 +48,8 @@
         function draw_rental_month_report() {
             var data = google.visualization.arrayToDataTable([
                 ['Estacionamento', 'Aluguéis de {% now "F" %}'],
-                {% for key, value in rental_month_report.items %}
-                    ['{{ key }}', {{ value }}]{% if not forloop.last %},{% endif %}
+                {% for value in rental_month_report %}
+                    ['{{ value.parking_space__parking_lot__name }}', {{ value.total }}]{% if not forloop.last %},{% endif %}
                 {% endfor %}
             ]);
             var options = {
@@ -78,6 +70,43 @@
                 title: 'Aluguéis de {% now "F" %}'
             };
             var chart = new google.visualization.PieChart(document.getElementById('rental_month_report'));
+
+            chart.draw(data, options);
+        }
+        google.charts.setOnLoadCallback(draw_empty);
+        {% endif %}
+
+    </script>
+
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+
+        {% if parking_space_status|length > 0 %}
+        function draw_rental_month_report() {
+            var data = google.visualization.arrayToDataTable([
+                ['Estacionamento', 'Aluguéis de {% now "F" %}'],
+                {% for value in parking_space_status %}
+                    ['{{ value.status|space_literal_status }}', {{ value.total }}]{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]);
+            var options = {
+                title: 'Status de vagas'
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('parking_space_report'));
+
+            chart.draw(data, options);
+        }
+        google.charts.setOnLoadCallback(draw_rental_month_report);
+        {% else %}
+        function draw_empty() {
+            var data = google.visualization.arrayToDataTable([
+                ['Estacionamento', 'Aluguéis de {% now "F" %}'],
+                ['Dados insuficientes', 1]
+            ]);
+            var options = {
+                title: 'Status de vagas'
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('parking_space_report'));
 
             chart.draw(data, options);
         }

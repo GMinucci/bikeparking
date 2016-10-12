@@ -7,7 +7,7 @@ from django.contrib import messages
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
 from django.http import HttpResponse
-from parking.reports import rentals_per_parking_lot_each_month, latest_transactions
+from parking.reports import rentals_per_parking_lot_each_month, latest_transactions, parking_space_status
 
 
 class IndexPage(TemplateView):
@@ -71,6 +71,7 @@ class SystemOverviewPage(View):
         view_parameters = {
             'rental_month_report': rentals_per_parking_lot_each_month(request.user),
             'latest_transactions': latest_transactions(request.user, 20),
+            'parking_space_status': parking_space_status(request.user),
         }
         return render(request, 'website/system/overview/index.html', view_parameters)
 

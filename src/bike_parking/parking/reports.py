@@ -1,6 +1,8 @@
 from operator import attrgetter
 
-from .models import Rental, Payment
+from django.db.models import Count
+
+from .models import Rental, Payment, ParkingSpace
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
@@ -34,17 +36,10 @@ def set_range_month_filter(date):
 
 
 def rentals_per_parking_lot_each_month(user):
-    rentals = Rental.objects.filter(
+    return Rental.objects.values('parking_space__parking_lot__name').filter(
         start_time__range=set_range_month_filter(timezone.now()),
         parking_space__parking_lot__owner__user=user
-    )
-    report = {}
-    for rent in rentals:
-        if rent.parking_space.parking_lot.name not in report:
-            report[rent.parking_space.parking_lot.name] = 1
-        else:
-            report[rent.parking_space.parking_lot.name] += 1
-    return report
+    ).annotate(total=Count('parking_space__parking_lot__name'))
 
 
 def latest_transactions(user, max_amount):
@@ -57,3 +52,7 @@ def latest_transactions(user, max_amount):
         transactions.append(ConciseTransaction(payment))
     transactions = sorted(transactions, key=lambda transaction: transaction.date, reverse=True)
     return transactions[:max_amount]
+
+
+def parking_space_status(user):
+    return ParkingSpace.objects.values('status').filter(parking_lot__owner__user=user).annotate(total=Count('status'))
