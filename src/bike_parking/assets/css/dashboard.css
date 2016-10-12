@@ -108,6 +108,6 @@ body {
   color: black;
 }
 
-form input, form select, form textarea, form checkbox {
+form input, form select, form textarea, form checkbox, form label {
     cursor: initial  !important;
 }

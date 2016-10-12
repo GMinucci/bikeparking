@@ -2,8 +2,8 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
-    SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemUserIndexPage, \
-    SystemAccountSettings, SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
+    SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemAccountSettings, \
+    SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
     SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace, SystemReportPerUnity, SystemReportPerUnityRentals, \
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
@@ -52,9 +52,6 @@ urlpatterns = [
         login_required(SystemReportPayments.as_view()), name='relatorios-pagamentos'),
     url(r'^sistema/relatorios/',
         login_required(SystemReportIndexPage.as_view()), name='relatorios'),
-
-    url(r'^sistema/usuarios/',
-        login_required(SystemUserIndexPage.as_view()), name='usuarios'),
 
     url(r'^sistema/configuracoes/',
         login_required(SystemAccountSettings.as_view()), name='configuracoes-conta'),

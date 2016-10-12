@@ -283,7 +283,3 @@ class SystemReportPaymentDetail(View):
                        'user_form': user_form,
                        'rental_form': rental_form,
                        'payment_id': kwargs['payment_id']})
-
-
-class SystemUserIndexPage(TemplateView):
-    template_name = 'website/system/user/index.html'
