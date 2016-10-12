@@ -2,17 +2,6 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                <div class="alert alert-success" role="alert">{{ message }}</div>
-            {% else %}
-                <div class="alert alert-danger" role="alert">{{ message }}</div>
-            {% endif %}
-        {% endfor %}
-    </ul>
-    {% endif %}
-
     <h2 class="page-header">Configurações</h2>
 
     <form action="." method="post">

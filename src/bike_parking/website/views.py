@@ -58,8 +58,8 @@ class SystemAccountSettings(View):
             person.user.__dict__.update(getattr(person_form, 'cleaned_data'))
             person.user.save()
             messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
-        else:
-            messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+            return redirect('configuracoes-conta')
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
         return render(request, 'website/system/settings/settings.html', {
             'person_form': person_form,
         })
@@ -121,10 +121,12 @@ class SystemParkingLotInsertUnity(View):
             parking_lot_instance.save()
             return redirect('estacionamentos')
 
-        if not location.is_valid():
-            return HttpResponse(location.errors)
-        else:
-            return HttpResponse(parking_lot.errors)
+        forms = {
+            u'Localização': location,
+            u'Estacionamento': parking_lot,
+        }
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/system/parking_lot/new-parking-lot.html', {'forms': forms})
 
 
 class SystemParkingLotDetailView(View):
@@ -144,8 +146,18 @@ class SystemParkingLotDetailView(View):
         parking_lot = ParkingLotForm(request.POST, instance=instance)
         if parking_lot.is_valid():
             parking_lot.save()
+            messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
             return redirect('estacionamentos')
-        return HttpResponse(parking_lot.errors)
+
+        parking_lot_instance = get_object_or_404(ParkingLot, id=kwargs['pk'])
+        last_transactions = parking_lot_instance.get_last_transactions(True)
+        view_objects = {
+            'parking_lot': parking_lot_instance,
+            'last_transactions': last_transactions,
+            'form': parking_lot,
+        }
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/system/parking_lot/detail.html', view_objects)
 
 
 class SystemParkingLotLocationEditView(View):
@@ -160,8 +172,11 @@ class SystemParkingLotLocationEditView(View):
         location = LocationForm(request.POST, instance=parking_lot_instance.location)
         if location.is_valid():
             location.save()
+            messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
             return redirect('estacionamento-detalhe', kwargs['pk'])
-        return HttpResponse(location.errors)
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/system/parking_lot/location-form.html',
+                      {'form': location})
 
 
 class SystemParkingLotSpacesList(ListView):
@@ -199,8 +214,11 @@ class SystemParkingLotSpaceEditSpace(View):
         parking_space = ParkingSpaceForm(request.POST, instance=parking_space_instance)
         if parking_space.is_valid():
             parking_space.save()
+            messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
             return redirect('estacionamento-detalhe-vagas', kwargs['pk'])
-        return HttpResponse(parking_space.errors)
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/system/parking_lot/parking_space_form.html',
+                      {'form': parking_space})
 
 
 class SystemReportIndexPage(TemplateView):
