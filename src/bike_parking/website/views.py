@@ -164,8 +164,11 @@ class SystemParkingLotLocationEditView(View):
 
     def get(self, request, *args, **kwargs):
         parking_lot = get_object_or_404(ParkingLot, id=kwargs['pk'])
-        return render(request, 'website/system/parking_lot/location-form.html',
-                      {'form': LocationForm(instance=parking_lot.location)})
+        return render(request, 'website/system/parking_lot/location-form.html', {
+            'form': LocationForm(instance=parking_lot.location),
+            'latitude': parking_lot.location.latitude,
+            'longitude': parking_lot.location.longitude,
+        })
 
     def post(self, request, *args, **kwargs):
         parking_lot_instance = get_object_or_404(ParkingLot, id=kwargs['pk'])

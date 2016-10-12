@@ -1,5 +1,6 @@
 {% extends "website/system/index.html" %}
 {% load crispy_forms_tags %}
+{% load to_dot %}
 {% block content %}
 
     <h2 class="page-header">Localização</h2>
@@ -17,5 +18,7 @@
             </div>
         </div>
     </div>
+
+    <iframe width="100%" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q={{ latitude|to_dot }},{{ longitude|to_dot }}&key=AIzaSyAlq0bkalJioSbXi-gDJQlnWGUnNLJqvFM" allowfullscreen></iframe>
 
 {% endblock %}
