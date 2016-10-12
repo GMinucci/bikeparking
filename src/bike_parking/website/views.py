@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
+from django.contrib import messages
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
 from django.http import HttpResponse
@@ -33,8 +34,35 @@ class SystemIndexPage(TemplateView):
     template_name = 'website/system/index.html'
 
 
-class SystemAccountSettings(TemplateView):
-    template_name = 'website/system/account/settings.html'
+class SystemAccountSettings(View):
+
+    def get(self, request, *args, **kwargs):
+        person = get_object_or_404(Person, user=request.user)
+        person_form = PersonDetailForm(initial={
+            'first_name': person.user.first_name,
+            'last_name': person.user.last_name,
+            'email': person.user.email,
+            'phone': person.phone,
+            'cpf': person.cpf
+        })
+        return render(request, 'website/system/settings/settings.html',{
+            'person_form': person_form,
+        })
+
+    def post(self, request, *args, **kwargs):
+        person_form = PersonDetailForm(request.POST)
+        if person_form.is_valid():
+            person = get_object_or_404(Person, user=request.user)
+            person.__dict__.update(getattr(person_form, 'cleaned_data'))
+            person.save()
+            person.user.__dict__.update(getattr(person_form, 'cleaned_data'))
+            person.user.save()
+            messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/system/settings/settings.html', {
+            'person_form': person_form,
+        })
 
 
 class SystemOverviewPage(View):
@@ -239,8 +267,8 @@ class SystemReportRentalDetail(View):
         rental = get_object_or_404(Rental, id=kwargs['rental_id'])
         rental_form = RentalDetailForm(instance=rental)
         user_form = PersonDetailForm(initial={
-                'name': rental.lodger.user.first_name,
-                'surname': rental.lodger.user.last_name,
+                'first_name': rental.lodger.user.first_name,
+                'last_name': rental.lodger.user.last_name,
                 'email': rental.lodger.user.email,
                 'active': rental.lodger.user.is_active,
                 'phone': rental.lodger.phone,
@@ -270,8 +298,8 @@ class SystemReportPaymentDetail(View):
         payment = get_object_or_404(Payment, id=kwargs['payment_id'])
         payment_form = PaymentDetailForm(instance=payment)
         user_form = PersonDetailForm(initial={
-                'name': payment.rental.lodger.user.first_name,
-                'surname': payment.rental.lodger.user.last_name,
+                'first_name': payment.rental.lodger.user.first_name,
+                'last_name': payment.rental.lodger.user.last_name,
                 'email': payment.rental.lodger.user.email,
                 'active': payment.rental.lodger.user.is_active,
                 'phone': payment.rental.lodger.phone,

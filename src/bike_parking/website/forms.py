@@ -75,9 +75,8 @@ class PaymentDetailForm(forms.ModelForm):
 
 
 class PersonDetailForm(forms.Form):
-    name = forms.CharField(label='Nome', max_length=100)
-    surname = forms.CharField(label='Sobrenome', max_length=100)
+    first_name = forms.CharField(label='Nome', max_length=100)
+    last_name = forms.CharField(label='Sobrenome', max_length=100)
     email = forms.CharField(label='Email', max_length=100)
     phone = forms.CharField(label='Telefone', max_length=100)
     cpf = forms.CharField(label='CPF', max_length=11)
-    active = forms.BooleanField(label='Ativo')

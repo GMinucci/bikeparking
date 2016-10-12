@@ -8,7 +8,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Configurações</a></li>
+                    <li><a href="{% url "configuracoes-conta" %}">Configurações</a></li>
                     <li><a href="/accounts/logout/">Sair</a></li>
                 </ul>
             </div>
@@ -28,9 +28,6 @@
                 </ul>
                 <ul class="nav nav-sidebar">
                     <li{% if "adicionar-unidade" in request.path %} class="active" {% endif %}><a href="{% url "adicionar-unidade" %}">Adicionar unidade<span class="sr-only">(current)</span></a></li>
-{#                    <li{% if "estacionamentos" in request.path %} class="active" {% endif %}><a href="{% url "estacionamentos" %}">Estacionamentos</a></li>#}
-{#                    <li{% if "relatorios" in request.path %} class="active" {% endif %}><a href="{% url "relatorios" %}">Relatórios</a></li>#}
-{#                    <li{% if "usuarios" in request.path %} class="active" {% endif %}><a href="{% url "usuarios" %}">Usuários</a></li>#}
                 </ul>
             </div>
 
