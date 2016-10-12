@@ -3,7 +3,7 @@ from django import forms
 # from crispy_forms.helper import FormHelper
 # from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 # from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
-from parking.models import Location, ParkingLot, ParkingSpace, Rental
+from parking.models import Location, ParkingLot, ParkingSpace, Rental, Payment
 
 
 class LocationForm(forms.ModelForm):
@@ -58,6 +58,19 @@ class RentalDetailForm(forms.ModelForm):
             'end_time',
             'total',
             'pin_code',
+        )
+
+
+class PaymentDetailForm(forms.ModelForm):
+
+    class Meta:
+        model = Payment
+        fields = (
+            'date',
+            'total',
+            'payment_type',
+            'status',
+            'redirect_url',
         )
 
 

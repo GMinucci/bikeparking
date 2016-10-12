@@ -104,3 +104,10 @@ body {
   border-radius: 50%;
 }
 
+.form-control {
+  color: black;
+}
+
+form input, form select, form textarea, form checkbox {
+    cursor: initial  !important;
+}

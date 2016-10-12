@@ -2,4 +2,55 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+    <h1 class="page-header">Pagamento #{{ payment_id }}</h1>
+
+    <form action="." method="post">
+    <fieldset disabled>
+    {% csrf_token %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Pagamento</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ payment_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Usuário</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ user_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Aluguel</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ rental_form|crispy }}
+
+            </div>
+        </div>
+    </div>
+
+    </fieldset>
+    </form>
+
 {%  endblock %}

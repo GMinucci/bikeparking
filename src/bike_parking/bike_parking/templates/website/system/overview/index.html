@@ -36,7 +36,7 @@
                     {% if transaction.transaction_type == 'Aluguel' %}
                         <a href="{% url "relatorios-alugueis-detalhe" transaction.id %}">
                     {% else %}
-                        <a>
+                        <a href="{% url "relatorios-pagamentos-detalhe" transaction.id %}">
                     {% endif %}
                     {{ transaction.transaction_type }}</a></td>
                 <td>{{ transaction.status }}</td>

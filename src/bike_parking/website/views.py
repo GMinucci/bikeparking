@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
-from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm
+from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
 from django.http import HttpResponse
 from parking.reports import rentals_per_parking_lot_each_month, latest_transactions
 
@@ -262,6 +262,27 @@ class SystemReportPayments(ListView):
     def get(self, request, *args, **kwargs):
         self.queryset = Payment.objects.filter(rental__parking_space__parking_lot__owner__user=request.user)
         return super(SystemReportPayments, self).get(request, *args, **kwargs)
+
+
+class SystemReportPaymentDetail(View):
+
+    def get(self, request, *args, **kwargs):
+        payment = get_object_or_404(Payment, id=kwargs['payment_id'])
+        payment_form = PaymentDetailForm(instance=payment)
+        user_form = PersonDetailForm(initial={
+                'name': payment.rental.lodger.user.first_name,
+                'surname': payment.rental.lodger.user.last_name,
+                'email': payment.rental.lodger.user.email,
+                'active': payment.rental.lodger.user.is_active,
+                'phone': payment.rental.lodger.phone,
+                'cpf': payment.rental.lodger.cpf
+            })
+        rental_form = RentalDetailForm(instance=payment.rental)
+        return render(request, 'website/system/report/detail/payment_detail.html',
+                      {'payment_form': payment_form,
+                       'user_form': user_form,
+                       'rental_form': rental_form,
+                       'payment_id': kwargs['payment_id']})
 
 
 class SystemUserIndexPage(TemplateView):
