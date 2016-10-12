@@ -7,11 +7,29 @@
 
 {% block content %}
 
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>
+    {% endif %}
+
 <h1>{% trans "Entrar" %}</h1>
 
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+
+    <label>Email:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Email" name="login">
+    </div>
+
+    <label>Senha:</label>
+    <div class="form-group">
+      <input type="password" class="form-control" placeholder="Senha" name="password">
+    </div>
+
+    <div class="form-group">
+        <label><input type="checkbox" aria-label="Lembrar" name="remember"> Lembrar-me</label>
+    </div>
+
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
