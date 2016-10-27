@@ -57,7 +57,7 @@ class ParkingLotViewSet(viewsets.ViewSet):
         serializer = ParkingLotDetailSerializer(queryset, many=False)
         return Response(serializer.data)
 
-    @detail_route(methods=['post'])
+    @detail_route(methods=['get'])
     def rent(self, request, pk):
         """
         Start a Rental for the first empty ParkingSpace using the user's cpf
@@ -74,10 +74,14 @@ class ParkingLotViewSet(viewsets.ViewSet):
             - code: 404
               message: Not found
         """
-        data = dict(request.data.iteritems())
-        data['lodger'] = get_object_or_404(Person, cpf=data.get('cpf')).pk
-        correct_space_id = get_object_or_404(ParkingSpace, number=data['parking_space'], parking_lot__id=pk).id
-        data['parking_space'] = correct_space_id
+        data = {"":"", }
+        data['lodger'] = str(get_object_or_404(Person, cpf=request.GET.get('cpf', '')).pk)
+        data['parking_space'] = str(get_object_or_404(ParkingSpace, number=request.GET.get('parking_space', 0),
+                                    parking_lot__id=pk).id)
+        data['rental_type'] = request.GET.get('rental_type', '')
+        # data['lodger'] = get_object_or_404(Person, cpf=data.get('cpf')).pk
+        # correct_space_id = get_object_or_404(ParkingSpace, number=data['parking_space'], parking_lot__id=pk).id
+        # data['parking_space'] = correct_space_id
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
