@@ -85,8 +85,8 @@ class ParkingLotViewSet(viewsets.ViewSet):
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response("OK")
-        return Response("ERROR")
+            return Response("RESPONSE=OK")
+        return Response("RESPONSE=ERROR")
 
     @detail_route(methods=['get'])
     def close(self, request, pk):
@@ -104,8 +104,8 @@ class ParkingLotViewSet(viewsets.ViewSet):
         rental = get_object_or_404(Rental, pin_code=request.GET.get('pin', ''))
         rental.end_time = timezone.now()
         rental.save()
-        create_payment_attempt(rental)
-        return Response(rental.parking_space.number)
+        # create_payment_attempt(rental)
+        return Response("RESPONSE=%s" % rental.parking_space.number)
 
 
 class RentalsViewSet(viewsets.ViewSet):
