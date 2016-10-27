@@ -85,10 +85,10 @@ class ParkingLotViewSet(viewsets.ViewSet):
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+            return Response("OK")
+        return Response("ERROR")
 
-    @detail_route(methods=['post'])
+    @detail_route(methods=['get'])
     def close(self, request, pk):
         """
         Close one rental using PIN Code
@@ -101,12 +101,11 @@ class ParkingLotViewSet(viewsets.ViewSet):
             - code: 404
               message: Not found
         """
-        data = dict(request.data.iteritems())
-        rental = get_object_or_404(Rental, pin_code=data.get('pin'))
+        rental = get_object_or_404(Rental, pin_code=request.GET.get('pin', ''))
         rental.end_time = timezone.now()
         rental.save()
         create_payment_attempt(rental)
-        return JsonResponse({'status': 'OK'})
+        return Response(rental.parking_space.number)
 
 
 class RentalsViewSet(viewsets.ViewSet):
