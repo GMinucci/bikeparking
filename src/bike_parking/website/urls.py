@@ -57,5 +57,5 @@ urlpatterns = [
         login_required(SystemAccountSettings.as_view()), name='configuracoes-conta'),
 
     url(r'^sistema/',
-        login_required(SystemOverviewRedirectPage.as_view())),
+        login_required(SystemOverviewRedirectPage.as_view()), name='sistema-index'),
 ]

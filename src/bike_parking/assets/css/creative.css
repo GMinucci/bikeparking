@@ -155,7 +155,9 @@ header {
   background-size: cover;
   -o-background-size: cover;
   background-position: center;
-  background-image: url('../../../../../../../../Downloads/startbootstrap-creative-gh-pages/img/header.jpg');
+  /*background-image: url('../../../../../../../../Downloads/startbootstrap-creative-gh-pages/img/header.jpg');*/
+  background-image: url('images/header.jpg');
+  /*{% static "vendor/magnific-popup/magnific-popup.css" %}*/
   text-align: center;
   color: white;
 }
