@@ -21,16 +21,13 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
-            {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
                 <ul class="nav nav-sidebar">
                     <li{% if "resumo" in request.path %} class="active" {% endif %}><a href="{% url "resumo" %}">Resumo<span class="sr-only">(current)</span></a></li>
-                    <li{% if "estacionamentos" in request.path %} class="active" {% endif %}><a href="{% url "estacionamentos" %}">Estacionamentos</a></li>
-                    <li{% if "relatorios" in request.path %} class="active" {% endif %}><a href="{% url "relatorios" %}">Relatórios</a></li>
+                    <li{% if "alugueis" in request.path %} class="active" {% endif %}><a href="{% url "alugueis" %}">Estacionamentos</a></li>
+                    <li{% if "pagamentos" in request.path %} class="active" {% endif %}><a href="{% url "pagamentos" %}">Relatórios</a></li>
                 </ul>
-                <ul class="nav nav-sidebar">
-                    <li{% if "adicionar-unidade" in request.path %} class="active" {% endif %}><a href="{% url "adicionar-unidade" %}">Adicionar unidade<span class="sr-only">(current)</span></a></li>
-                </ul>
-            {% endif %}
+                {% endif %}
             </div>
 
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

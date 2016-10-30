@@ -74,6 +74,13 @@ class Person(models.Model):
         user.save()
         return cls(user=user, phone=person_data.get('phone'), cpf=person_data.get('cpf'))
 
+    @classmethod
+    def create_with_user(cls, user, person_data):
+        user.first_name = person_data.get('first_name')
+        user.last_name = person_data.get('last_name')
+        user.save()
+        return cls(user=user, phone=person_data.get('phone'), cpf=person_data.get('cpf'))
+
 
 class Location(models.Model):
     cep = models.CharField('CEP', max_length=15)

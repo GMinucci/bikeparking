@@ -1,13 +1,12 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
     SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemAccountSettings, \
     SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
     SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace, SystemReportPerUnity, SystemReportPerUnityRentals, \
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
-from django.views.generic.base import RedirectView
+from .customer_views import CreateOrLoginView, CustomerOverviewView, CustomerAccountCreationView
 
 
 urlpatterns = [
@@ -58,4 +57,12 @@ urlpatterns = [
 
     url(r'^sistema/',
         login_required(SystemOverviewRedirectPage.as_view()), name='sistema-index'),
+
+    url(r'^usuario/criar-ou-entrar/',
+        CreateOrLoginView.as_view(), name='usuario-criar-ou-logar'),
+    url(r'^usuario/criar-conta/',
+        login_required(CustomerAccountCreationView.as_view()), name='usuario-criar-conta'),
+
+    url(r'^usuario/',
+        login_required(CustomerOverviewView.as_view()), name='usuario-resumo'),
 ]
