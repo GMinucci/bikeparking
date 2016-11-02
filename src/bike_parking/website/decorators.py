@@ -7,7 +7,7 @@ def user_or_admin(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
         if not request.user.is_authenticated():
-            return redirect('usuario-resumo')
+            return redirect('login-redirect')
         if not request.user.groups.filter(name='admin').exists():
             try:
                 person = Person.objects.get(user=request.user)
@@ -17,5 +17,16 @@ def user_or_admin(function):
             except:
                 return redirect('usuario-criar-conta')
         else:
-            return redirect('sistema-index')
+            return function(request, *args, **kwargs)
+    return decorator
+
+
+def admin_redirect_on_user(function):
+    @wraps(function)
+    def decorator(request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('login-redirect')
+        if request.user.groups.filter(name='admin').exists():
+            return redirect('login-redirect')
+        return function(request, *args, **kwargs)
     return decorator

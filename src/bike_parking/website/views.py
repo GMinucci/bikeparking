@@ -78,12 +78,12 @@ class SystemOverviewPage(View):
         return render(request, 'website/system/overview/index.html', view_parameters)
 
 
-@method_decorator(user_or_admin, name='dispatch')
-class SystemOverviewRedirectPage(TemplateView):
-    template_name = 'website/system/overview/index.html'
-
-    def get(self, request, *args, **kwargs):
-        return redirect(reverse('resumo'))
+# @method_decorator(user_or_admin, name='dispatch')
+# class SystemOverviewRedirectPage(TemplateView):
+#     template_name = 'website/system/overview/index.html'
+#
+#     def get(self, request, *args, **kwargs):
+#         return redirect(reverse('resumo'))
 
 
 @method_decorator(user_or_admin, name='dispatch')

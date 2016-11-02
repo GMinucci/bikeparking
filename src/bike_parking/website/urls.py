@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from .views import IndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
     SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemAccountSettings, \
-    SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
+    SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
     SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace, SystemReportPerUnity, SystemReportPerUnityRentals, \
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
@@ -57,7 +57,7 @@ urlpatterns = [
         login_required(SystemAccountSettings.as_view()), name='configuracoes-conta'),
 
     url(r'^sistema/',
-        login_required(SystemOverviewRedirectPage.as_view()), name='sistema-index'),
+        login_required(SystemOverviewPage.as_view()), name='sistema-index'),
 
     url(r'^usuario/alugueis/',
         login_required(CustomerRentalList.as_view()), name='usuario-alugueis'),

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
@@ -8,14 +9,17 @@ from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, P
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
 from django.http import HttpResponse
 from parking.reports import rentals_per_parking_lot_each_month, customer_latest_transactions, parking_space_status
+from decorators import admin_redirect_on_user
 
 
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CreateOrLoginView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'website/customer/account_redirect/create_or_login.html', {})
 
 
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CustomerOverviewView(View):
 
     def get(self, request, *args, **kwargs):
@@ -29,7 +33,7 @@ class LoginRedirectView(View):
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
-            return redirect('usuario-resumo')
+            return redirect('/account/login/')
         if not request.user.groups.filter(name='admin').exists():
             try:
                 person = Person.objects.get(user=request.user)
@@ -42,6 +46,7 @@ class LoginRedirectView(View):
             return redirect('sistema-index')
 
 
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CustomerAccountCreationView(View):
 
     def get(self, request, *args, **kwargs):
@@ -63,6 +68,7 @@ class CustomerAccountCreationView(View):
         })
 
 
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CustomerRentalList(ListView):
     template_name = 'website/customer/overview/rentals.html'
     context_object_name = 'rentals'
@@ -73,6 +79,7 @@ class CustomerRentalList(ListView):
         return super(CustomerRentalList, self).get(request, *args, **kwargs)
 
 
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CustomerPaymentsList(ListView):
     template_name = 'website/customer/overview/payments.html'
     context_object_name = 'payments'
