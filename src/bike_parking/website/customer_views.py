@@ -88,3 +88,34 @@ class CustomerPaymentsList(ListView):
     def get(self, request, *args, **kwargs):
         self.queryset = Payment.objects.filter(rental__lodger__user=request.user)
         return super(CustomerPaymentsList, self).get(request, *args, **kwargs)
+
+
+class CustomerAccountSettings(View):
+
+    def get(self, request, *args, **kwargs):
+        person = get_object_or_404(Person, user=request.user)
+        person_form = PersonDetailForm(initial={
+            'first_name': person.user.first_name,
+            'last_name': person.user.last_name,
+            'email': person.user.email,
+            'phone': person.phone,
+            'cpf': person.cpf
+        })
+        return render(request, 'website/customer/settings/index.html',{
+            'person_form': person_form,
+        })
+
+    def post(self, request, *args, **kwargs):
+        person_form = PersonDetailForm(request.POST)
+        if person_form.is_valid():
+            person = get_object_or_404(Person, user=request.user)
+            person.__dict__.update(getattr(person_form, 'cleaned_data'))
+            person.save()
+            person.user.__dict__.update(getattr(person_form, 'cleaned_data'))
+            person.user.save()
+            messages.add_message(request, messages.SUCCESS, 'Informações atualizadas com sucesso.')
+            return redirect('configuracoes-conta')
+        messages.add_message(request, messages.ERROR, 'Erro ao atualizar informações.')
+        return render(request, 'website/customer/settings/index.html', {
+            'person_form': person_form,
+        })

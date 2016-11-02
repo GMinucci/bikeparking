@@ -7,15 +7,12 @@ from .views import IndexPage, SystemOverviewPage, SystemParkingLotInsertLocation
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
 from .customer_views import CreateOrLoginView, CustomerOverviewView, CustomerAccountCreationView, CustomerRentalList, \
-    CustomerPaymentsList, LoginRedirectView
+    CustomerPaymentsList, LoginRedirectView, CustomerAccountSettings
 
 
 urlpatterns = [
     url(r'^$',
         IndexPage.as_view(), name='index'),
-
-    # url(r'^admin/',
-    #     login_required(AdminIndexPage.as_view()), name='admin_index'),
 
     url(r'^sistema/resumo/',
         login_required(SystemOverviewPage.as_view()), name='resumo'),
@@ -69,6 +66,9 @@ urlpatterns = [
         CreateOrLoginView.as_view(), name='usuario-criar-ou-logar'),
     url(r'^usuario/criar-conta/',
         login_required(CustomerAccountCreationView.as_view()), name='usuario-criar-conta'),
+
+    url(r'^usuario/configuracoes/',
+        login_required(CustomerAccountSettings.as_view()), name='usuario-settings'),
 
     url(r'^usuario/',
         login_required(CustomerOverviewView.as_view()), name='usuario-resumo'),

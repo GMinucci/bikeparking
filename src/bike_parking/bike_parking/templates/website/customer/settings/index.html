@@ -1,0 +1,26 @@
+{% extends "website/customer/index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <h2 class="page-header">Configurações</h2>
+
+    <a href="/accounts/password/change/" class="btn btn-primary" role="button">Alterar senha</a>
+    <br><br>
+
+    <form action="." method="post">
+    {% csrf_token %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="panel-body">
+
+            {{ person_form|crispy }}
+
+            </div>
+
+            <input type="submit" value="Salvar" class="btn btn-success">
+        </div>
+    </div>
+    </form>
+
+{% endblock %}
