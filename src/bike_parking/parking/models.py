@@ -55,6 +55,7 @@ class Person(models.Model):
     active = models.BooleanField('Ativo', default=True)
     phone = models.CharField('Telefone', max_length=100, blank=True, null=True)
     cpf = models.CharField('CPF', max_length=11)
+    owner = models.BooleanField('Proprietario', blank=True, default=False)
 
     class Meta:
         verbose_name = 'Usuario'

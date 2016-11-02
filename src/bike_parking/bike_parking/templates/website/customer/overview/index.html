@@ -1,0 +1,55 @@
+{% extends "website/customer/index.html" %}
+{% load space_literal_status %}
+{% block content %}
+
+    <h1 class="page-header">Resumo de transações</h1>
+
+        {% if latest_transactions|length > 0 %}
+        <div class="panel panel-default">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Estacionamento</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for transaction in latest_transactions %}
+
+                    <tr>
+                    <td>
+                        {% if transaction.transaction_type == 'Aluguel' %}
+                            <a href="{% url "relatorios-alugueis-detalhe" transaction.id %}">
+                        {% else %}
+                            <a href="{% url "relatorios-pagamentos-detalhe" transaction.id %}">
+                        {% endif %}
+                        {{ transaction.transaction_type }}</a></td>
+                    <td>{{ transaction.status }}</td>
+                    <td>{{ transaction.date }}</td>
+                    <td>{{ transaction.parking_lot_name }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+            <div class="jumbotron">
+                <h1>Bem vindo!</h1>
+                <br>
+                <p>Parece que você ainda não tem nenhuma transação efetuada.</p>
+                <br>
+                <p>Comece já a utilizar sua conta BikePark, basta ir até qualquer um de nossas filiais, digitar seu CPF e guardar sua bicicleta.</p>
+                <br>
+                <p>Para retirar sua bicicleta basta digitar o número PIN de 4 digitos da vaga e pronto!</p>
+                <br>
+                <p>Para pagar o aluguel basta selecionar a aba Alugéis e clicar em EFETUAR PAGAMENTO.</p>
+            </div>
+
+        {% endif %}
+
+{% endblock %}

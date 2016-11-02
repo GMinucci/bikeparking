@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from django.contrib import messages
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
 from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
-from django.http import HttpResponse
 from parking.reports import rentals_per_parking_lot_each_month, latest_transactions, parking_space_status
+from decorators import user_or_admin
 
 
 class IndexPage(TemplateView):
@@ -18,22 +19,22 @@ class LoginPage(TemplateView):
     template_name = 'website/login.html'
 
 
-class AdminIndexPage(ListView):
-    template_name = 'website/admin/index.html'
-    context_object_name = 'parkings'
-    queryset = ParkingLot.objects.none()
-
-    def get(self, request, *args, **kwargs):
-        if not request.user.groups.filter(name='admin').exists():
-            return redirect(reverse('resumo'))
-        self.queryset = ParkingLot.objects.filter(owner__user=request.user)
-        return super(AdminIndexPage, self).get(request, *args, **kwargs)
+# class AdminIndexPage(ListView):
+    # template_name = 'website/admin/index.html'
+    # context_object_name = 'parkings'
+    # queryset = ParkingLot.objects.none()
+    #
+    # def get(self, request, *args, **kwargs):
+    #     self.queryset = ParkingLot.objects.filter(owner__user=request.user)
+    #     return super(AdminIndexPage, self).get(request, *args, **kwargs)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemIndexPage(TemplateView):
     template_name = 'website/system/index.html'
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemAccountSettings(View):
 
     def get(self, request, *args, **kwargs):
@@ -65,6 +66,7 @@ class SystemAccountSettings(View):
         })
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemOverviewPage(View):
 
     def get(self, request, *args, **kwargs):
@@ -76,6 +78,7 @@ class SystemOverviewPage(View):
         return render(request, 'website/system/overview/index.html', view_parameters)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemOverviewRedirectPage(TemplateView):
     template_name = 'website/system/overview/index.html'
 
@@ -83,6 +86,7 @@ class SystemOverviewRedirectPage(TemplateView):
         return redirect(reverse('resumo'))
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotIndexPage(ListView):
     template_name = 'website/system/parking_lot/index.html'
     context_object_name = 'parkinglots'
@@ -95,6 +99,7 @@ class SystemParkingLotIndexPage(ListView):
         return super(SystemParkingLotIndexPage, self).get(request, *args, **kwargs)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotInsertLocationFormView(CreateView):
     model = Location
     template_name = 'website/system/parking_lot/location-form.html'
@@ -102,6 +107,7 @@ class SystemParkingLotInsertLocationFormView(CreateView):
     success_url = '/sistema/estacionamentos/'
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotInsertUnity(View):
 
     def get(self, request, *args, **kwargs):
@@ -130,6 +136,7 @@ class SystemParkingLotInsertUnity(View):
         return render(request, 'website/system/parking_lot/new-parking-lot.html', {'forms': forms})
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotDetailView(View):
 
     def get(self, request, *args, **kwargs):
@@ -161,6 +168,7 @@ class SystemParkingLotDetailView(View):
         return render(request, 'website/system/parking_lot/detail.html', view_objects)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotLocationEditView(View):
 
     def get(self, request, *args, **kwargs):
@@ -183,6 +191,7 @@ class SystemParkingLotLocationEditView(View):
                       {'form': location})
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotSpacesList(ListView):
     template_name = 'website/system/parking_lot/parking_space_list.html'
     context_object_name = 'spaces'
@@ -206,6 +215,7 @@ class SystemParkingLotSpacesList(ListView):
         return redirect('estacionamento-detalhe-vagas', kwargs['pk'])
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemParkingLotSpaceEditSpace(View):
 
     def get(self, request, *args, **kwargs):
@@ -225,10 +235,12 @@ class SystemParkingLotSpaceEditSpace(View):
                       {'form': parking_space})
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportIndexPage(TemplateView):
     template_name = 'website/system/report/index.html'
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportPerUnity(ListView):
     template_name = 'website/system/report/parking_space_report.html'
     context_object_name = 'parkinglots'
@@ -241,6 +253,7 @@ class SystemReportPerUnity(ListView):
         return super(SystemReportPerUnity, self).get(request, *args, **kwargs)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportPerUnityRentals(ListView):
     template_name = 'website/system/report/parking_space_rental_report.html'
     context_object_name = 'rentals'
@@ -257,6 +270,7 @@ class SystemReportPerUnityRentals(ListView):
         return context
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportPerUnityPayments(ListView):
     template_name = 'website/system/report/parking_space_payment_report.html'
     context_object_name = 'payments'
@@ -273,6 +287,7 @@ class SystemReportPerUnityPayments(ListView):
         return context
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportRentals(ListView):
     template_name = 'website/system/report/rentals.html'
     context_object_name = 'rentals'
@@ -283,6 +298,7 @@ class SystemReportRentals(ListView):
         return super(SystemReportRentals, self).get(request, *args, **kwargs)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportRentalDetail(View):
 
     def get(self, request, *args, **kwargs):
@@ -304,6 +320,7 @@ class SystemReportRentalDetail(View):
                        'rental_id': kwargs['rental_id']})
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportPayments(ListView):
     template_name = 'website/system/report/payments.html'
     context_object_name = 'payments'
@@ -314,6 +331,7 @@ class SystemReportPayments(ListView):
         return super(SystemReportPayments, self).get(request, *args, **kwargs)
 
 
+@method_decorator(user_or_admin, name='dispatch')
 class SystemReportPaymentDetail(View):
 
     def get(self, request, *args, **kwargs):

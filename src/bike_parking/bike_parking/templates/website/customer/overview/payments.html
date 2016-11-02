@@ -1,0 +1,40 @@
+{% extends "website/customer/index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <h2 class="page-header">Pagamentos</h2>
+
+    <div class="panel panel-default">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Total</th>
+                <th>Tipo de pagamento</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in payments %}
+                <tr>
+                    {% if transaction.date %}
+                        <td>{{ transaction.date|date:"j/n/Y G:i" }}</td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+
+                    <td>R$ {{ transaction.total }}</td>
+
+                    {% if transaction.payment_type %}
+                        <td>{{ transaction.get_payment_type_display }}</td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+                    <td><a href="{% url "relatorios-pagamentos-detalhe" transaction.id %}">{{ transaction.get_status_display }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

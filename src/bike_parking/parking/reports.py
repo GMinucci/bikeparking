@@ -42,6 +42,18 @@ def rentals_per_parking_lot_each_month(user):
     ).annotate(total=Count('parking_space__parking_lot__name'))
 
 
+def customer_latest_transactions(user, max_amount):
+    rentals = Rental.objects.filter(lodger__user=user)
+    payments = Payment.objects.filter(rental__lodger__user=user)
+    transactions = []
+    for rental in rentals:
+        transactions.append(ConciseTransaction(rental))
+    for payment in payments:
+        transactions.append(ConciseTransaction(payment))
+    transactions = sorted(transactions, key=lambda transaction: transaction.date, reverse=True)
+    return transactions[:max_amount]
+
+
 def latest_transactions(user, max_amount):
     rentals = Rental.objects.filter(parking_space__parking_lot__owner__user=user)
     payments = Payment.objects.filter(rental__parking_space__parking_lot__owner__user=user)

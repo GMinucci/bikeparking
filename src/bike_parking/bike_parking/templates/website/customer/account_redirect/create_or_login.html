@@ -4,10 +4,10 @@
     <br><br><br><br>
     <div class="row">
         <div class="col-lg-4 col-lg-offset-2 text-center">
-            <a class="btn btn-primary btn-lg" href="{% url "usuario-resumo" %}" role="button">Já possuo uma conta</a>
+            <a class="btn btn-primary btn-lg" href="{% url "login-redirect" %}" role="button">Já possuo uma conta</a>
         </div>
         <div class="col-lg-4 text-center">
-            <a class="btn btn-primary btn-lg" href="/accounts/signup/?next=/usuario/criar-conta/" role="button">Ainda não possuo uma conta</a>
+            <a class="btn btn-primary btn-lg" href="/accounts/signup/" role="button">Ainda não possuo uma conta</a>
         </div>
     </div>
 {% endblock %}

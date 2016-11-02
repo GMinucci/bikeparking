@@ -5,15 +5,32 @@
 {% block head_title %}{% trans "Entrar" %}{% endblock %}
 
 {% block content %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">Email ou senha incorretos.</div>
+    {% endif %}
+
 <h1>{% trans "Entrar" %}</h1>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+
+    <label>Email:</label>
+    <div class="form-group">
+      <input id="id_email" type="email" class="form-control" placeholder="Email" name="email" required>
+    </div>
+
+    <label>Senha:</label>
+    <div class="form-group">
+      <input id="id_password1" type="password" class="form-control" placeholder="Senha" name="password1" required>
+    </div>
+
+    <label>Senha (novamente):</label>
+    <div class="form-group">
+      <input id="id_password2" type="password" class="form-control" placeholder="Senha" name="password2" required>
+    </div>
+
+    <button class="btn btn-success" type="submit">{% trans "Sign Up" %}</button>
 </form>
 
 {% endblock %}

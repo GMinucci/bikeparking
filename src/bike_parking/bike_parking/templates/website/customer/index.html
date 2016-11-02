@@ -23,9 +23,9 @@
             <div class="col-sm-3 col-md-2 sidebar">
                 {% if user.is_authenticated %}
                 <ul class="nav nav-sidebar">
-                    <li{% if "resumo" in request.path %} class="active" {% endif %}><a href="{% url "resumo" %}">Resumo<span class="sr-only">(current)</span></a></li>
-                    <li{% if "alugueis" in request.path %} class="active" {% endif %}><a href="{% url "alugueis" %}">Estacionamentos</a></li>
-                    <li{% if "pagamentos" in request.path %} class="active" {% endif %}><a href="{% url "pagamentos" %}">Relatórios</a></li>
+                    <li{% if "resumo" in request.path %} class="active" {% endif %}><a href="{% url "usuario-resumo" %}">Resumo<span class="sr-only">(current)</span></a></li>
+                    <li{% if "alugueis" in request.path %} class="active" {% endif %}><a href="{% url "usuario-alugueis" %}">Alugueis</a></li>
+                    <li{% if "pagamentos" in request.path %} class="active" {% endif %}><a href="{% url "usuario-pagamentos" %}">Pagamentos</a></li>
                 </ul>
                 {% endif %}
             </div>

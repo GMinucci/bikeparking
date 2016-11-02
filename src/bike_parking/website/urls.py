@@ -1,20 +1,21 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from .views import IndexPage, AdminIndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
+from .views import IndexPage, SystemOverviewPage, SystemParkingLotInsertLocationFormView, \
     SystemParkingLotInsertUnity, SystemParkingLotIndexPage, SystemReportIndexPage, SystemAccountSettings, \
     SystemOverviewRedirectPage, SystemParkingLotDetailView, SystemParkingLotLocationEditView, \
     SystemParkingLotSpacesList, SystemParkingLotSpaceEditSpace, SystemReportPerUnity, SystemReportPerUnityRentals, \
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
-from .customer_views import CreateOrLoginView, CustomerOverviewView, CustomerAccountCreationView
+from .customer_views import CreateOrLoginView, CustomerOverviewView, CustomerAccountCreationView, CustomerRentalList, \
+    CustomerPaymentsList, LoginRedirectView
 
 
 urlpatterns = [
     url(r'^$',
         IndexPage.as_view(), name='index'),
 
-    url(r'^admin/',
-        login_required(AdminIndexPage.as_view()), name='admin_index'),
+    # url(r'^admin/',
+    #     login_required(AdminIndexPage.as_view()), name='admin_index'),
 
     url(r'^sistema/resumo/',
         login_required(SystemOverviewPage.as_view()), name='resumo'),
@@ -58,11 +59,20 @@ urlpatterns = [
     url(r'^sistema/',
         login_required(SystemOverviewRedirectPage.as_view()), name='sistema-index'),
 
-    url(r'^usuario/criar-ou-entrar/',
+    url(r'^usuario/alugueis/',
+        login_required(CustomerRentalList.as_view()), name='usuario-alugueis'),
+
+    url(r'^usuario/pagamentos/',
+        login_required(CustomerPaymentsList.as_view()), name='usuario-pagamentos'),
+
+    url(r'^criar-ou-entrar/',
         CreateOrLoginView.as_view(), name='usuario-criar-ou-logar'),
     url(r'^usuario/criar-conta/',
         login_required(CustomerAccountCreationView.as_view()), name='usuario-criar-conta'),
 
     url(r'^usuario/',
         login_required(CustomerOverviewView.as_view()), name='usuario-resumo'),
+
+    url(r'^login-redirect/',
+        login_required(LoginRedirectView.as_view()), name='login-redirect'),
 ]

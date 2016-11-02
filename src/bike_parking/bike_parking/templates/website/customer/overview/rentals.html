@@ -1,0 +1,34 @@
+{% extends "website/customer/index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <h2 class="page-header">Aluguéis</h2>
+
+    <div class="panel panel-default">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th>Estacionamento</th>
+                <th>Data</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in rentals %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td><a href="{% url "relatorios-alugueis-detalhe" transaction.id %}">{{ transaction.get_rental_status_display }}</a></td>
+                    <td>{{ transaction.parking_space.parking_lot.name }}</td>
+                    {% if transaction.end_time %}
+                        <td>{{ transaction.end_time|date:"j/n/Y G:i" }}</td>
+                    {% else %}
+                        <td>{{ transaction.start_time|date:"j/n/Y G:i" }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
