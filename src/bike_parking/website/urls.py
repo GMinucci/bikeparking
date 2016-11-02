@@ -7,7 +7,8 @@ from .views import IndexPage, SystemOverviewPage, SystemParkingLotInsertLocation
     SystemReportPerUnityPayments, SystemReportRentals, SystemReportPayments, SystemReportRentalDetail, \
     SystemReportPaymentDetail
 from .customer_views import CreateOrLoginView, CustomerOverviewView, CustomerAccountCreationView, CustomerRentalList, \
-    CustomerPaymentsList, LoginRedirectView, CustomerAccountSettings
+    CustomerPaymentsList, LoginRedirectView, CustomerAccountSettingsView, CustomerRentalPaymentView, \
+    CustomerPaymentDetail, CustomerRentalDetail
 
 
 urlpatterns = [
@@ -56,9 +57,15 @@ urlpatterns = [
     url(r'^sistema/',
         login_required(SystemOverviewPage.as_view()), name='sistema-index'),
 
+    url(r'^usuario/alugueis/(?P<rental_id>[0-9]+)/pagar/,',
+        login_required(CustomerRentalPaymentView.as_view()), name='usuario-aluguel-pagar'),
+    url(r'^usuario/alugueis/(?P<rental_id>[0-9]+)/',
+        login_required(CustomerRentalDetail.as_view()), name='usuario-alugueis-detalhe'),
     url(r'^usuario/alugueis/',
         login_required(CustomerRentalList.as_view()), name='usuario-alugueis'),
 
+    url(r'^usuario/pagamentos/(?P<payment_id>[0-9]+)/',
+        login_required(CustomerPaymentDetail.as_view()), name='usuario-pagamentos-detalhe'),
     url(r'^usuario/pagamentos/',
         login_required(CustomerPaymentsList.as_view()), name='usuario-pagamentos'),
 
@@ -68,7 +75,7 @@ urlpatterns = [
         login_required(CustomerAccountCreationView.as_view()), name='usuario-criar-conta'),
 
     url(r'^usuario/configuracoes/',
-        login_required(CustomerAccountSettings.as_view()), name='usuario-settings'),
+        login_required(CustomerAccountSettingsView.as_view()), name='usuario-settings'),
 
     url(r'^usuario/',
         login_required(CustomerOverviewView.as_view()), name='usuario-resumo'),

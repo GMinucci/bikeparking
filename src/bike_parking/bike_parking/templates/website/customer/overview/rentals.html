@@ -10,20 +10,28 @@
             <tr>
                 <th>#</th>
                 <th>Status</th>
+                <th>PIN</th>
                 <th>Estacionamento</th>
                 <th>Data</th>
+                <th>Pagar</th>
             </tr>
             </thead>
             <tbody>
             {% for transaction in rentals %}
                 <tr>
                     <td>{{ transaction.id }}</td>
-                    <td><a href="{% url "relatorios-alugueis-detalhe" transaction.id %}">{{ transaction.get_rental_status_display }}</a></td>
+                    <td><a href="{% url "usuario-alugueis-detalhe" transaction.id %}">{{ transaction.get_rental_status_display }}</a></td>
+                    <td>{{ transaction.pin_code }}</td>
                     <td>{{ transaction.parking_space.parking_lot.name }}</td>
                     {% if transaction.end_time %}
                         <td>{{ transaction.end_time|date:"j/n/Y G:i" }}</td>
                     {% else %}
                         <td>{{ transaction.start_time|date:"j/n/Y G:i" }}</td>
+                    {% endif %}
+                    {% if transaction.rental_status == "closed" %}
+                        <td><a href="{% url "usuario-aluguel-pagar" transaction.id %}">Efetuar pagamento</a></td>
+                    {% else %}
+                        <td>-</td>
                     {% endif %}
                 </tr>
             {% endfor %}

@@ -27,13 +27,23 @@ class ParkingLotForm(forms.ModelForm):
     class Meta:
         model = ParkingLot
         fields = (
-            # owner = models.ForeignKey(Person, related_name='parking_lots')
-            # location = models.ForeignKey(Location)
             'name',
             'description',
             'default_price',
             'per_hour_price',
             'active',
+        )
+
+
+class CustomerParkingLotForm(forms.ModelForm):
+
+    class Meta:
+        model = ParkingLot
+        fields = (
+            'name',
+            'description',
+            'default_price',
+            'per_hour_price',
         )
 
 
@@ -71,6 +81,18 @@ class PaymentDetailForm(forms.ModelForm):
             'payment_type',
             'status',
             'redirect_url',
+        )
+
+
+class CustomerPaymentDetailForm(forms.ModelForm):
+
+    class Meta:
+        model = Payment
+        fields = (
+            'date',
+            'total',
+            'payment_type',
+            'status',
         )
 
 

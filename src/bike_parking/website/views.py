@@ -46,7 +46,7 @@ class SystemAccountSettings(View):
             'phone': person.phone,
             'cpf': person.cpf
         })
-        return render(request, 'website/system/settings/settings.html',{
+        return render(request, 'website/system/settings/settings.html', {
             'person_form': person_form,
         })
 

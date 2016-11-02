@@ -30,7 +30,7 @@
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    <td><a href="{% url "relatorios-pagamentos-detalhe" transaction.id %}">{{ transaction.get_status_display }}</a></td>
+                    <td><a href="{% url "usuario-pagamentos-detalhe" transaction.id %}">{{ transaction.get_status_display }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -5,8 +5,10 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.shortcuts import redirect, get_object_or_404
 from django.shortcuts import render
 from django.contrib import messages
+
+from api.payment import create_payment_attempt
 from parking.models import ParkingLot, Location, Person, ParkingSpace, Rental, Payment
-from forms import LocationForm, ParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, PaymentDetailForm
+from forms import LocationForm, CustomerParkingLotForm, ParkingSpaceForm, RentalDetailForm, PersonDetailForm, CustomerPaymentDetailForm
 from django.http import HttpResponse
 from parking.reports import rentals_per_parking_lot_each_month, customer_latest_transactions, parking_space_status
 from decorators import admin_redirect_on_user
@@ -16,6 +18,8 @@ from decorators import admin_redirect_on_user
 class CreateOrLoginView(View):
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect('usuario-resumo')
         return render(request, 'website/customer/account_redirect/create_or_login.html', {})
 
 
@@ -80,6 +84,19 @@ class CustomerRentalList(ListView):
 
 
 @method_decorator(admin_redirect_on_user, name='dispatch')
+class CustomerRentalDetail(View):
+
+    def get(self, request, *args, **kwargs):
+        rental = get_object_or_404(Rental, id=kwargs['rental_id'])
+        # rental_form = RentalDetailForm(instance=rental)
+        # parking_lot_form = CustomerParkingLotForm(instance=rental.parking_space.parking_lot)
+        return render(request, 'website/customer/overview/rental_detail.html',
+                      {'rental': rental,
+                       'parking_lot': rental.parking_space.parking_lot,
+                       'rental_id': kwargs['rental_id']})
+
+
+@method_decorator(admin_redirect_on_user, name='dispatch')
 class CustomerPaymentsList(ListView):
     template_name = 'website/customer/overview/payments.html'
     context_object_name = 'payments'
@@ -90,7 +107,21 @@ class CustomerPaymentsList(ListView):
         return super(CustomerPaymentsList, self).get(request, *args, **kwargs)
 
 
-class CustomerAccountSettings(View):
+@method_decorator(admin_redirect_on_user, name='dispatch')
+class CustomerPaymentDetail(View):
+
+    def get(self, request, *args, **kwargs):
+        payment = get_object_or_404(Payment, id=kwargs['payment_id'])
+        payment_form = CustomerPaymentDetailForm(instance=payment)
+        rental_form = RentalDetailForm(instance=payment.rental)
+        return render(request, 'website/customer/overview/payments_detail.html',
+                      {'payment_form': payment_form,
+                       'rental_form': rental_form,
+                       'payment_id': kwargs['payment_id']})
+
+
+@method_decorator(admin_redirect_on_user, name='dispatch')
+class CustomerAccountSettingsView(View):
 
     def get(self, request, *args, **kwargs):
         person = get_object_or_404(Person, user=request.user)
@@ -119,3 +150,16 @@ class CustomerAccountSettings(View):
         return render(request, 'website/customer/settings/index.html', {
             'person_form': person_form,
         })
+
+
+@method_decorator(admin_redirect_on_user, name='dispatch')
+class CustomerRentalPaymentView(View):
+
+    def get(self, request, *args, **kwargs):
+        rental = get_object_or_404(Rental, id=kwargs['rental_id'])
+        payment = create_payment_attempt(rental)
+        if payment.redirect_url is not "":
+            return redirect(payment.redirect_url)
+        else:
+            messages.add_message(request, messages.ERROR, 'Erro ao gerar pagamento, tente novamente mais tarde.')
+        return redirect('usuario-alugueis')
