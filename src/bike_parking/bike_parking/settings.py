@@ -26,7 +26,7 @@ SECRET_KEY = '2l2!bo0k=s=k08ww(^zaklnimmk=pe+@br@^*-f5d&a=(#!5%e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', ]
 
 # Admin emails
 # See https://docs.djangoproject.com/en/1.8/ref/settings/#admins
