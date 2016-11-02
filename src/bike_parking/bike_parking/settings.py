@@ -24,7 +24,7 @@ PROJECT_DIR = Path(__file__).parent
 SECRET_KEY = '2l2!bo0k=s=k08ww(^zaklnimmk=pe+@br@^*-f5d&a=(#!5%e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
