@@ -14,7 +14,7 @@ from parking.reports import rentals_per_parking_lot_each_month, customer_latest_
 from decorators import admin_redirect_on_user
 
 
-@method_decorator(admin_redirect_on_user, name='dispatch')
+# @method_decorator(admin_redirect_on_user, name='dispatch')
 class CreateOrLoginView(View):
 
     def get(self, request, *args, **kwargs):
