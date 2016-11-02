@@ -327,18 +327,9 @@ class SystemReportPaymentDetail(View):
 
     def get(self, request, *args, **kwargs):
         payment = get_object_or_404(Payment, id=kwargs['payment_id'])
-        payment_form = PaymentDetailForm(instance=payment)
-        user_form = PersonDetailForm(initial={
-                'first_name': payment.rental.lodger.user.first_name,
-                'last_name': payment.rental.lodger.user.last_name,
-                'email': payment.rental.lodger.user.email,
-                'active': payment.rental.lodger.user.is_active,
-                'phone': payment.rental.lodger.phone,
-                'cpf': payment.rental.lodger.cpf
-            })
-        rental_form = RentalDetailForm(instance=payment.rental)
+        person = get_object_or_404(Person, user=request.user)
         return render(request, 'website/system/report/detail/payment_detail.html',
-                      {'payment_form': payment_form,
-                       'user_form': user_form,
-                       'rental_form': rental_form,
+                      {'payment': payment,
+                       'person': person,
+                       'rental': payment.rental,
                        'payment_id': kwargs['payment_id']})

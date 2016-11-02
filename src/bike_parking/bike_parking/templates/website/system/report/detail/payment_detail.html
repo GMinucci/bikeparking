@@ -4,10 +4,6 @@
 
     <h1 class="page-header">Pagamento #{{ payment_id }}</h1>
 
-    <form action="." method="post">
-    <fieldset disabled>
-    {% csrf_token %}
-
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Pagamento</h3>
@@ -16,7 +12,24 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ payment_form|crispy }}
+                <label>Data de pagamento:</label>
+                <div class="well well-sm">{{ payment.date|default_if_none:"-" }}</div>
+
+                <label>Total:</label>
+                <div class="well well-sm">{{ payment.total }}</div>
+
+                <label>Tipo de pagamento:</label>
+                <div class="well well-sm">{{ payment.payment_type|default_if_none:"-" }}</div>
+
+                <label>Status:</label>
+                <div class="well well-sm">{{ payment.get_status_display }}</div>
+
+                <label>URL de pagamento:</label>
+                {% if payment.redirect_url != "" %}
+                    <div class="well well-sm"><a href="{{ payment.redirect_url }}">{{ payment.redirect_url }}</a></div>
+                {% else %}
+                    <div class="well well-sm">-</div>
+                {% endif %}
 
             </div>
         </div>
@@ -30,7 +43,17 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ user_form|crispy }}
+                <label>Nome:</label>
+                <div class="well well-sm">{{ person.user.first_name }} {{ person.user.last_name }}</div>
+
+                <label>Email:</label>
+                <div class="well well-sm">{{ person.user.email }}</div>
+
+                <label>Telefone:</label>
+                <div class="well well-sm">{{ person.phone }}</div>
+
+                <label>CPF:</label>
+                <div class="well well-sm">{{ person.cpf }}</div>
 
             </div>
         </div>
@@ -44,13 +67,29 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ rental_form|crispy }}
+                <label>Vaga:</label>
+                <div class="well well-sm">{{ rental.parking_space.number }}</div>
+
+                <label>Tipo de aluguel:</label>
+                <div class="well well-sm">{{ rental.get_rental_type_display }}</div>
+
+                <label>Status:</label>
+                <div class="well well-sm">{{ rental.get_rental_status_display }}</div>
+
+                <label>Início:</label>
+                <div class="well well-sm">{{ rental.start_time }}</div>
+
+                <label>Término:</label>
+                <div class="well well-sm">{{ rental.end_time }}</div>
+
+                <label>Total:</label>
+                <div class="well well-sm">{{ rental.total }}</div>
+
+                <label>PIN:</label>
+                <div class="well well-sm">{{ rental.pin_code }}</div>
 
             </div>
         </div>
     </div>
-
-    </fieldset>
-    </form>
 
 {%  endblock %}
