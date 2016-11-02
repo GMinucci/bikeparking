@@ -4,10 +4,6 @@
 
     <h1 class="page-header">Aluguel #{{ rental_id }}</h1>
 
-    <form action="." method="post">
-    <fieldset disabled>
-    {% csrf_token %}
-
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Aluguel</h3>
@@ -16,7 +12,26 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ rental_form|crispy }}
+                <label>Vaga:</label>
+                <div class="well well-sm">{{ rental.parking_space.number }}</div>
+
+                <label>Tipo de aluguel:</label>
+                <div class="well well-sm">{{ rental.get_rental_type_display }}</div>
+
+                <label>Status:</label>
+                <div class="well well-sm">{{ rental.get_rental_status_display }}</div>
+
+                <label>Início:</label>
+                <div class="well well-sm">{{ rental.start_time }}</div>
+
+                <label>Término:</label>
+                <div class="well well-sm">{{ rental.end_time }}</div>
+
+                <label>Total:</label>
+                <div class="well well-sm">{{ rental.total }}</div>
+
+                <label>PIN:</label>
+                <div class="well well-sm">{{ rental.pin_code }}</div>
 
             </div>
         </div>
@@ -30,7 +45,17 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ user_form|crispy }}
+                <label>Nome:</label>
+                <div class="well well-sm">{{ person.user.first_name }} {{ person.user.last_name }}</div>
+
+                <label>Email:</label>
+                <div class="well well-sm">{{ person.user.email }}</div>
+
+                <label>Telefone:</label>
+                <div class="well well-sm">{{ person.phone }}</div>
+
+                <label>CPF:</label>
+                <div class="well well-sm">{{ person.cpf }}</div>
 
             </div>
         </div>
@@ -44,13 +69,23 @@
         <div class="panel-body">
             <div class="panel-body">
 
-            {{ parking_lot_form|crispy }}
+                <label>Nome:</label>
+                <div class="well well-sm">{{ parking_lot.name }}</div>
+
+                <label>Descrição:</label>
+                <div class="well well-sm">{{ parking_lot.description }}</div>
+
+                <label>Valor mínimo:</label>
+                <div class="well well-sm">{{ parking_lot.default_price }}</div>
+
+                <label>Valor por hora:</label>
+                <div class="well well-sm">{{ parking_lot.per_hour_price }}</div>
+
+                <label>Ativo:</label>
+                <div class="well well-sm">{{ parking_lot.active }}</div>
 
             </div>
         </div>
     </div>
-
-    </fieldset>
-    </form>
 
 {%  endblock %}

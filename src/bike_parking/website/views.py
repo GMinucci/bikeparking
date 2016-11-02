@@ -303,20 +303,11 @@ class SystemReportRentalDetail(View):
 
     def get(self, request, *args, **kwargs):
         rental = get_object_or_404(Rental, id=kwargs['rental_id'])
-        rental_form = RentalDetailForm(instance=rental)
-        user_form = PersonDetailForm(initial={
-                'first_name': rental.lodger.user.first_name,
-                'last_name': rental.lodger.user.last_name,
-                'email': rental.lodger.user.email,
-                'active': rental.lodger.user.is_active,
-                'phone': rental.lodger.phone,
-                'cpf': rental.lodger.cpf
-            })
-        parking_lot_form = ParkingLotForm(instance=rental.parking_space.parking_lot)
+        person = get_object_or_404(Person, user=request.user)
         return render(request, 'website/system/report/detail/rental_detail.html',
-                      {'rental_form': rental_form,
-                       'user_form': user_form,
-                       'parking_lot_form': parking_lot_form,
+                      {'rental': rental,
+                       'person': person,
+                       'parking_lot': rental.parking_space.parking_lot,
                        'rental_id': kwargs['rental_id']})
 
 
