@@ -112,11 +112,9 @@ class CustomerPaymentDetail(View):
 
     def get(self, request, *args, **kwargs):
         payment = get_object_or_404(Payment, id=kwargs['payment_id'])
-        payment_form = CustomerPaymentDetailForm(instance=payment)
-        rental_form = RentalDetailForm(instance=payment.rental)
         return render(request, 'website/customer/overview/payments_detail.html',
-                      {'payment_form': payment_form,
-                       'rental_form': rental_form,
+                      {'payment': payment,
+                       'rental': payment.rental,
                        'payment_id': kwargs['payment_id']})
 
 
