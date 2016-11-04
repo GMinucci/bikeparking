@@ -84,8 +84,8 @@ class ParkingLotViewSet(viewsets.ViewSet):
         # data['parking_space'] = correct_space_id
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            return Response("RESPONSE=OK")
+            rent = serializer.save()
+            return Response("RESPONSE=OK" + rent.pin_code)
         return Response("RESPONSE=ERROR")
 
     @detail_route(methods=['get'])
