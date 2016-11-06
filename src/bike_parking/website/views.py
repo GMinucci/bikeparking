@@ -306,7 +306,7 @@ class SystemReportRentalDetail(View):
         person = get_object_or_404(Person, user=request.user)
         return render(request, 'website/system/report/detail/rental_detail.html',
                       {'rental': rental,
-                       'person': person,
+                       'person': rental.lodger,
                        'parking_lot': rental.parking_space.parking_lot,
                        'rental_id': kwargs['rental_id']})
 
@@ -330,6 +330,6 @@ class SystemReportPaymentDetail(View):
         person = get_object_or_404(Person, user=request.user)
         return render(request, 'website/system/report/detail/payment_detail.html',
                       {'payment': payment,
-                       'person': person,
+                       'person': payment.rental.lodger,
                        'rental': payment.rental,
                        'payment_id': kwargs['payment_id']})
