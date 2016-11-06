@@ -85,7 +85,7 @@ class ParkingLotViewSet(viewsets.ViewSet):
         serializer = RentSerializer(data=data)
         if serializer.is_valid():
             rent = serializer.save()
-            return Response("RESPONSE=OK" + rent.pin_code)
+            return Response("RESPONSE=OK" + str(rent.pin_code))
         return Response("RESPONSE=ERROR")
 
     @detail_route(methods=['get'])
@@ -193,7 +193,7 @@ class PaymentViewSet(viewsets.ViewSet):
             - code: 403
               message: Forbidden
         """
-        queryset = Payment.objects.filter(rental__lodger__user=request.user, status='open')
+        queryset = Payment.objects.filter(rental__lodger__user=request.user)
         serializer = PaymentSerializer(queryset, many=True)
         return Response(serializer.data)
 
