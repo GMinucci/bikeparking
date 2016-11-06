@@ -19,7 +19,7 @@
                 <div class="well well-sm">{{ payment.total }}</div>
 
                 <label>Tipo de pagamento:</label>
-                <div class="well well-sm">{{ payment.payment_type|default_if_none:"-" }}</div>
+                <div class="well well-sm">{{ payment.get_payment_type_dispay|default_if_none:"-" }}</div>
 
                 <label>Status:</label>
                 <div class="well well-sm">{{ payment.get_status_display }}</div>
